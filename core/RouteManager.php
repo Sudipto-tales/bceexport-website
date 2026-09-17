@@ -312,6 +312,6 @@ class RouteManager
         }
 
         $route = trim($requestUri, '/');
-        return $route === '' ? 'default' : $route;
+        return $route;
     }
 }
