@@ -2,6 +2,6 @@
 App::render('admin/layout', [
     'page' => 'certificates',
     'title' => 'Edit Certificate',
-    'type' => 'plain',
+    'type' => 'form',
     'script' => 'certificate-form',
 ]);

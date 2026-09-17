@@ -248,10 +248,11 @@ class ResourceController extends ApiController
 
         /* Soft. The panel offers Undo on the toast, and a hard delete makes
            that a lie. The row leaves every list the moment deleted_at is set. */
-        db_execute(
-            'UPDATE ' . $r['table'] . ' SET deleted_at = ?, updated_at = ?, updated_by = ? WHERE id = ?',
-            [now_iso(), now_iso(), $this->userId(), $row['id']]
-        );
+        $this->updateRow($r, (int) $row['id'], [
+            'deleted_at' => now_iso(),
+            'updated_at' => now_iso(),
+            'updated_by' => $this->userId(),
+        ]);
 
         ActivityLog::record('delete', $r['name'], $id, $this->describe($r, $row));
 
@@ -273,10 +274,11 @@ class ResourceController extends ApiController
             Api::notFound();
         }
 
-        db_execute(
-            'UPDATE ' . $r['table'] . ' SET deleted_at = NULL, updated_at = ?, updated_by = ? WHERE id = ?',
-            [now_iso(), $this->userId(), $row['id']]
-        );
+        $this->updateRow($r, (int) $row['id'], [
+            'deleted_at' => null,
+            'updated_at' => now_iso(),
+            'updated_by' => $this->userId(),
+        ]);
 
         $restored = $this->find($r, $id, true);
 
@@ -960,7 +962,7 @@ class ResourceController extends ApiController
 
     private function publicKey(array $r, array $body, ?int $exceptId, array &$fields): string
     {
-        $key = trim((string) ($body['id'] ?? ''));
+        $key = trim((string) ($body['id'] ?? $body[$r['key']] ?? ''));
 
         if ($key === '') {
             /* Derived from whatever the resource calls its label, so creating
@@ -975,6 +977,10 @@ class ResourceController extends ApiController
 
         $sql = 'SELECT COUNT(*) FROM ' . $r['table'] . ' WHERE ' . $r['key'] . ' = ?';
         $params = [$key];
+
+        if ($this->tableHasDeletedAt($r['table'])) {
+            $sql .= ' AND deleted_at IS NULL';
+        }
 
         if ($exceptId !== null) {
             $sql .= ' AND id <> ?';
@@ -1147,12 +1153,23 @@ class ResourceController extends ApiController
         return $cache[$table] = in_array('deleted_at', $columns, true);
     }
 
-    /* ---------------------------------------------------------
-       Writing the parts that are not columns
-       --------------------------------------------------------- */
+    private function filterExistingColumns(string $table, array $columns): array
+    {
+        static $cache = [];
+        if (!isset($cache[$table])) {
+            global $pdo;
+            $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+            $rows = $driver === 'sqlite'
+                ? $pdo->query("PRAGMA table_info({$table})")->fetchAll()
+                : $pdo->query("SHOW COLUMNS FROM {$table}")->fetchAll();
+            $cache[$table] = array_map(static fn ($row) => $row['name'] ?? $row['Field'] ?? '', $rows);
+        }
+        return array_filter($columns, static fn ($col) => in_array($col, $cache[$table], true), ARRAY_FILTER_USE_KEY);
+    }
 
     private function insert(array $r, array $columns): int
     {
+        $columns = $this->filterExistingColumns($r['table'], $columns);
         $names = array_keys($columns);
 
         db_execute(
@@ -1168,6 +1185,8 @@ class ResourceController extends ApiController
 
     private function updateRow(array $r, int $id, array $columns): void
     {
+        $columns = $this->filterExistingColumns($r['table'], $columns);
+
         if (!$columns) {
             return;
         }

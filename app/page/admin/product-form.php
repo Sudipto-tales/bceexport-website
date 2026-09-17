@@ -2,6 +2,6 @@
 App::render('admin/layout', [
     'page' => 'products',
     'title' => 'Edit Product',
-    'type' => 'plain',
+    'type' => 'form',
     'script' => 'product-form',
 ]);
