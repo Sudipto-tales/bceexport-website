@@ -9,7 +9,7 @@
             <div class="col-lg-6 pe-lg-0 wow fadeInRight" data-wow-delay="0.1s" style="min-height: 400px;">
                 <div class="position-relative h-100">
                     <?php if (!empty($category['image'])): ?>
-                    <img class="position-absolute img-fluid w-100 h-100" src="<?= e(ltrim($category['image'], '/')) ?>" style="object-fit: cover;" alt="<?= e($category['name']) ?>">
+                    <img class="position-absolute img-fluid w-100 h-100" src="<?= base_url(ltrim($category['image'], '/')) ?>" style="object-fit: cover;" alt="<?= e($category['name']) ?>">
                     <?php else: ?>
                     <img class="position-absolute img-fluid w-100 h-100" src="<?= base_url('img/placeholder.png') ?>" style="object-fit: cover;" alt="<?= e($category['name']) ?>">
                     <?php endif; ?>
@@ -48,11 +48,17 @@
                 <?php foreach ($products as $product): ?>
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="<?= $delay ?>s">
                     <div class="team-item p-4">
-                        <div class="overflow-hidden mb-4">
+                        <div class="overflow-hidden mb-4" style="height:240px">
                             <?php if (!empty($product['image'])): ?>
-                            <img class="img-fluid" src="<?= base_url('img/' . e($product['image'])) ?>" alt="<?= e($product['name']) ?>">
+                                <?php 
+                                $pImg = ltrim($product['image'], '/');
+                                if (!str_starts_with($pImg, 'img/') && !str_starts_with($pImg, 'assets/')) {
+                                    $pImg = 'img/' . $pImg;
+                                }
+                                ?>
+                                <img class="img-fluid w-100 h-100" style="object-fit:cover" src="<?= base_url($pImg) ?>" alt="<?= e($product['name']) ?>">
                             <?php else: ?>
-                            <img class="img-fluid" src="<?= base_url('img/placeholder.png') ?>" alt="<?= e($product['name']) ?>">
+                                <img class="img-fluid w-100 h-100" style="object-fit:cover" src="<?= base_url('img/placeholder.png') ?>" alt="<?= e($product['name']) ?>">
                             <?php endif; ?>
                         </div>
                         <h5 class="mb-0"><?= e($product['name']) ?></h5>

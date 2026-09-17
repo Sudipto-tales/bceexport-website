@@ -19,9 +19,15 @@
                 <i class="fa fa-quote-right fa-3x text-light position-absolute top-0 end-0 mt-n3 me-4"></i>
                 <div class="d-flex align-items-end mb-4">
                     <?php if (!empty($testimonial['photo'])): ?>
-                    <img class="img-fluid flex-shrink-0" src="<?= base_url('img/' . e($testimonial['photo'])) ?>" style="width: 80px; height: 80px;" alt="<?= e($testimonial['name']) ?>">
+                        <?php 
+                        $tPhoto = ltrim($testimonial['photo'], '/');
+                        if (!str_starts_with($tPhoto, 'img/') && !str_starts_with($tPhoto, 'assets/')) {
+                            $tPhoto = 'img/' . $tPhoto;
+                        }
+                        ?>
+                        <img class="img-fluid flex-shrink-0" src="<?= base_url($tPhoto) ?>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;" alt="<?= e($testimonial['name']) ?>">
                     <?php else: ?>
-                    <img class="img-fluid flex-shrink-0" src="<?= base_url('img/placeholder.png') ?>" style="width: 80px; height: 80px;" alt="<?= e($testimonial['name']) ?>">
+                        <img class="img-fluid flex-shrink-0" src="<?= base_url('img/placeholder.png') ?>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;" alt="<?= e($testimonial['name']) ?>">
                     <?php endif; ?>
                     <div class="ms-4">
                         <h5 class="mb-1"><?= e($testimonial['name']) ?></h5>

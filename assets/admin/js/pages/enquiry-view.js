@@ -27,30 +27,29 @@
        them without a developer; the substitution contract stays the same. */
     const TEMPLATES = [
         {
-            id: 'ack', label: 'Acknowledge',
-            body: 'Dear {{name}},\n\nThank you for contacting BCE Export. We have received your message and our team will get back to you within one working day.\n\nWarm regards,\n{{me}}\nBCE Export',
+            id: 'ack', label: 'Acknowledge Enquiry',
+            body: 'Dear {{name}},\n\nThank you for reaching out to BCE Export. We have received your export inquiry and our international sales team will provide detailed catalog and pricing information within 24 hours.\n\nWarm regards,\n{{me}}\nBCE Export',
         },
         {
-            id: 'appointment', label: 'Offer an appointment',
-            body: 'Dear {{name}},\n\nWe can see you at the {{department}} OPD. Please call {{phone}} to confirm a slot, or reply with a day that suits you and we will hold one.\n\nDo bring any previous reports and a photo ID.\n\nWarm regards,\n{{me}}',
+            id: 'quotation', label: 'Send Quotation & Catalog',
+            body: 'Dear {{name}},\n\nThank you for your interest in BCE Export products. We have prepared the export catalog along with FOB/CIF pricing. Please let us know your required quantities and destination port so we can finalize the shipment terms.\n\nWarm regards,\n{{me}}\nBCE Export',
         },
         {
-            id: 'insurance', label: 'Insurance / billing',
-            body: 'Dear {{name}},\n\nOur billing desk handles insurance and package pricing. Please call {{phone}} between 9am and 6pm, or share your policy details here and we will check empanelment for you.\n\nWarm regards,\n{{me}}',
+            id: 'shipping', label: 'Shipping & Logistics',
+            body: 'Dear {{name}},\n\nRegarding your shipment inquiry: we provide full container load (FCL) and less than container load (LCL) freight solutions via air and ocean with certified export documentation.\n\nWarm regards,\n{{me}}\nBCE Export',
         },
         {
-            id: 'reports', label: 'Reports and records',
-            body: 'Dear {{name}},\n\nReports can be collected from the records desk on the ground floor, or emailed to the address on file once they are signed off.\n\nWarm regards,\n{{me}}',
+            id: 'custom_order', label: 'Custom & Artisanal Orders',
+            body: 'Dear {{name}},\n\nWe would be glad to customize handicrafts, dimensions, and specialized finishes according to your requirements. Please share your detailed specifications or design references.\n\nWarm regards,\n{{me}}\nBCE Export',
         },
     ];
 
-    /* Phase 1 has no session; the panel acts as the Admin Desk account. */
-    const ME = { id: 'usr-001', name: 'Admin Desk' };
+    const ME = { id: 'usr-001', name: 'BCE Export Desk' };
 
     let row = null;
     let users = [];
     let departments = [];
-    let phone = '+91 90460 05557';
+    let phone = '+91 8900379037';
 
     window.TMH.boot(init);
 

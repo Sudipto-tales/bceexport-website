@@ -36,7 +36,7 @@ class Auth
             'samesite' => 'Lax',
             /* Only over TLS in production; forcing it in development would
                mean the cookie is never set and nobody can log in locally. */
-            'secure' => APP_ENV === 'production',
+            'secure' => (APP_ENV === 'production') && (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
         ]);
 
         session_start();
@@ -183,7 +183,7 @@ class Auth
             'path' => '/',
             'httponly' => true,
             'samesite' => 'Lax',
-            'secure' => APP_ENV === 'production',
+            'secure' => (APP_ENV === 'production') && (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
         ]);
     }
 

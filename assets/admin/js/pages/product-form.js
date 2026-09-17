@@ -3,7 +3,7 @@
 
     const { util: U, store, fields: F, form: formLib, layout, toast } = window.TMH;
     const params = new URLSearchParams(window.location.search);
-    const productId = params.get('id');
+    const productId = params.get('id') || params.get('slug');
 
     window.TMH.boot(init);
 
@@ -28,19 +28,19 @@
                         ${F.section({
                             fields: [
                                 F.text({ name: 'name', label: 'Product Name', required: true, value: record ? record.name : '' }),
-                                F.text({ name: 'slug', label: 'URL Slug', placeholder: 'auto-generated if empty', value: record ? record.slug : '' }),
+                                F.text({ name: 'slug', label: 'URL Slug', placeholder: 'auto-generated if empty', value: record ? (record.slug || record.id) : '' }),
                                 F.select({
                                     name: 'categoryId',
                                     label: 'Category',
                                     required: true,
-                                    options: categories.map((c) => ({ value: c.id, label: c.name })),
+                                    options: categories.map((c) => ({ value: c.id || c.slug, label: c.name })),
                                     value: record ? record.categoryId : '',
                                 }),
                                 F.textarea({ name: 'shortDescription', label: 'Short Summary', rows: 2, value: record ? record.shortDescription : '' }),
                                 F.textarea({ name: 'description', label: 'Full Description', rows: 5, value: record ? record.description : '' }),
                                 F.media({ name: 'image', label: 'Product Image (URL or Upload)', value: record ? record.image : '', hint: 'Paste external image link or click to upload.' }),
                                 F.status({ value: record ? record.status : 'published' }),
-                                F.toggle({ name: 'featured', label: 'Feature on Home Page', value: record ? record.featured : false }),
+                                F.toggle({ name: 'featured', label: 'Feature on Home Page', value: record ? !!record.featured : false }),
                             ],
                         })}
                     </div>
@@ -62,15 +62,21 @@
                 data.slug = U.slugify(data.name);
             }
 
-            if (productId) {
-                await store.update('products', productId, data);
-                toast.success('Product updated successfully');
-            } else {
-                await store.create('products', data);
-                toast.success('Product created successfully');
-            }
+            try {
+                if (productId) {
+                    await store.update('products', productId, data);
+                    toast.success('Product updated successfully');
+                } else {
+                    await store.create('products', data);
+                    toast.success('Product created successfully');
+                }
 
-            window.location.href = 'products';
+                setTimeout(() => {
+                    window.location.href = 'products';
+                }, 400);
+            } catch (err) {
+                toast.error(err.message || 'Failed to save product');
+            }
         });
     }
 }());

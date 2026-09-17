@@ -465,13 +465,15 @@ class ResourceController extends ApiController
 
     protected function find(array $r, string $id, bool $liveOnly): ?array
     {
-        $sql = 'SELECT * FROM ' . $r['table'] . ' WHERE ' . $r['key'] . ' = ?';
+        $numId = ctype_digit($id) ? (int) $id : 0;
+        $sql = 'SELECT * FROM ' . $r['table'] . ' WHERE (' . $r['key'] . ' = ?' . ($numId > 0 ? ' OR id = ?' : '') . ')';
+        $params = $numId > 0 ? [$id, $numId] : [$id];
 
-        if ($liveOnly) {
+        if ($liveOnly && $this->tableHasDeletedAt($r['table'])) {
             $sql .= ' AND deleted_at IS NULL';
         }
 
-        return db_fetch_one($sql, [$id]) ?: null;
+        return db_fetch_one($sql, $params) ?: null;
     }
 
     /**

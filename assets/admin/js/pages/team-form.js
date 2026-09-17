@@ -3,7 +3,7 @@
 
     const { util: U, store, fields: F, form: formLib, layout, toast } = window.TMH;
     const params = new URLSearchParams(window.location.search);
-    const memberId = params.get('id');
+    const memberId = params.get('id') || params.get('slug');
 
     window.TMH.boot(init);
 
@@ -52,15 +52,21 @@
 
             if (!data.slug) data.slug = U.slugify(data.name);
 
-            if (memberId) {
-                await store.update('team-members', memberId, data);
-                toast.success('Member updated');
-            } else {
-                await store.create('team-members', data);
-                toast.success('Member added');
-            }
+            try {
+                if (memberId) {
+                    await store.update('team-members', memberId, data);
+                    toast.success('Team member updated successfully');
+                } else {
+                    await store.create('team-members', data);
+                    toast.success('Team member added successfully');
+                }
 
-            window.location.href = 'team';
+                setTimeout(() => {
+                    window.location.href = 'team';
+                }, 400);
+            } catch (err) {
+                toast.error(err.message || 'Failed to save team member');
+            }
         });
     }
 }());

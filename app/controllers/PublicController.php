@@ -140,7 +140,7 @@ class PublicController extends BaseController
             return;
         }
 
-        $products = get_products_by_category((int) $category['id']);
+        $products = get_products_by_category($category);
 
         $this->page('category', [
             'title' => $category['name'],

@@ -17,8 +17,6 @@ $pageDescription = $description ?? 'Leading exporter of Indian Handicrafts, Leat
     <meta content="<?= e($pageDescription) ?>" name="description">
     <meta content="BCE Export, Indian Handicrafts, Export, Leather, Jute, Dhokra, Terracotta, Furniture" name="keywords">
 
-    <!-- Favicon -->
-    <link href="<?= base_url('img/favicon.ico') ?>" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -118,8 +118,9 @@
                         </i>
                         <div class="ps-4">
                             <h6>whatsapp for any query!</h6>
-                            <a href="https://wa.me/+918900379037">
-                            <h3 class="text-primary m-0">+91 8900379037</h3>
+                            <?php $waPhone = setting('contact', 'whatsapp', '+91 8900379037'); ?>
+                            <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $waPhone) ?>">
+                            <h3 class="text-primary m-0"><?= e($waPhone) ?></h3>
                         </div></a>
                     </div>
                 </div>
@@ -128,19 +129,19 @@
                         <div class="col-sm-6">
                             <div class="bg-primary p-4 mb-4 wow fadeIn" data-wow-delay="0.3s">
                                 <i class="fa fa-users fa-2x text-white mb-3"></i>
-                                <h2 class="text-white mb-2" data-toggle="counter-up">700</h2>
+                                <h2 class="text-white mb-2" data-toggle="counter-up"><?= e(preg_replace('/[^0-9]/', '', (string) setting('stats', 'clients', '700'))) ?></h2>
                                 <p class="text-white mb-0">Happy Clients</p>
                             </div>
                             <div class="bg-secondary p-4 wow fadeIn" data-wow-delay="0.5s">
                                 <i class="fa fa-ship fa-2x text-white mb-3"></i>
-                                <h2 class="text-white mb-2" data-toggle="counter-up">654</h2>
+                                <h2 class="text-white mb-2" data-toggle="counter-up"><?= e(preg_replace('/[^0-9]/', '', (string) setting('stats', 'exports', '654'))) ?></h2>
                                 <p class="text-white mb-0">Complete Shipments</p>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="bg-success p-4 wow fadeIn" data-wow-delay="0.7s">
                                 <i class="fa fa-star fa-2x text-white mb-3"></i>
-                                <h2 class="text-white mb-2" data-toggle="counter-up">565</h2>
+                                <h2 class="text-white mb-2" data-toggle="counter-up"><?= e(preg_replace('/[^0-9]/', '', (string) setting('stats', 'products', '565'))) ?></h2>
                                 <p class="text-white mb-0">Customer Reviews</p>
                             </div>
                         </div>
@@ -160,83 +161,22 @@
                 <h1 class="mb-5">What We Export</h1>
             </div>
             <div class="row g-4">
-                <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="service-item p-4">
-                        <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/service-1.webp" alt="">
+                <?php if (!empty($categories)): ?>
+                    <?php $delay = 0.3; foreach ($categories as $cat): ?>
+                        <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="<?= $delay ?>s">
+                            <div class="service-item p-4">
+                                <div class="overflow-hidden mb-4" style="height:220px">
+                                    <img class="img-fluid w-100 h-100" style="object-fit:cover" src="<?= base_url(ltrim($cat['image'] ?? 'img/service-1.webp', '/')) ?>" alt="<?= e($cat['name']) ?>">
+                                </div>
+                                <h4 class="mb-3"><?= e($cat['name']) ?></h4>
+                                <p><?= e($cat['description'] ?? '') ?></p>
+                                <a class="btn-slide mt-2" href="<?= base_url('products/' . $cat['slug']) ?>"><i class="fa fa-eye"></i><span>view Product</span></a>
+                                <a class="btn-slide mt-2" style="color:green" href="<?= base_url('contact') ?>"><i class="fa fa-shopping-basket"></i><span>order Product</span></a>
+                            </div>
                         </div>
-                        <h4 class="mb-3">Leather</h4>
-                        <p>A wide range of leather products, crafted with quality materials, providing durability and style. Suitable for various fashion and utility needs.</p>
-                        <a class="btn-slide mt-2" href="<?= base_url('products/leather') ?>"><i class="fa fa-eye"></i><span>view Product</span></a>
-                        <a class="btn-slide mt-2 " style="color:green" href="<?= base_url('contact') ?>"><i class="fa fa-shopping-basket" ></i><span>oder Product</span></a>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item p-4">
-                        <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/service-2.webp" alt="">
-                        </div>
-                        <h4 class="mb-3">wooden Handicraft</h4>
-                        <p>Unique, handmade artifacts that capture traditional craftsmanship and cultural artistry, ideal for home décor and gifting.</p>
-                        <a class="btn-slide mt-2" href="<?= base_url('products/wooden-handicraft') ?>"><i class="fa fa-eye"></i><span>view Product</span></a>
-                        <a class="btn-slide mt-2 " style="color:green" href="<?= base_url('contact') ?>"><i class="fa fa-shopping-basket" ></i><span>order Product</span></a>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="service-item p-4">
-                        <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/service-3.webp" alt="">
-                        </div>
-                        <h4 class="mb-3">Furniture</h4>
-                        <p>Well-crafted and modern furniture solutions designed to enhance the comfort and aesthetics of any living or work space.</p>
-                        <a class="btn-slide mt-2" href="<?= base_url('products/furniture') ?>"><i class="fa fa-eye"></i><span>view Product</span></a>
-                        <a class="btn-slide mt-2 " style="color:green" href="<?= base_url('contact') ?>"><i class="fa fa-shopping-basket" ></i><span>order Product</span></a>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="service-item p-4">
-                        <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/service-4.webp" alt="">
-                        </div>
-                        <h4 class="mb-3">Jute Products</h4>
-                        <p>Eco-friendly jute products blending durability with natural elegance, perfect for fashion, home decor, and utility needs.</p>
-                        <a class="btn-slide mt-2" href="<?= base_url('products/jute') ?>"><i class="fa fa-eye"></i><span>view Product</span></a>
-                        <a class="btn-slide mt-2 " style="color:green" href="<?= base_url('contact') ?>"><i class="fa fa-shopping-basket" ></i><span>order Product</span></a>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item p-4">
-                        <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/service-5.webp" alt="">
-                        </div>
-                        <h4 class="mb-3">Dhokra Products</h4>
-                        <p>Traditional Dhokra metal handicrafts crafted by skilled artisans showcasing timeless tribal artistry.</p>
-                        <a class="btn-slide mt-2" href="<?= base_url('products/dhokra') ?>"><i class="fa fa-eye"></i><span>view Product</span></a>
-                        <a class="btn-slide mt-2 " style="color:green" href="<?= base_url('contact') ?>"><i class="fa fa-shopping-basket" ></i><span>order Product</span></a>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="service-item p-4">
-                        <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/service-6.webp" alt="">
-                        </div>
-                        <h4 class="mb-3">Terracotta Product</h4>
-                        <p>Authentic terracotta handicrafts handcrafted by artisans, reflecting traditional Indian culture, artistry, and timeless design.</p>
-                        <a class="btn-slide mt-2" href="<?= base_url('products/terracotta') ?>"><i class="fa fa-eye"></i><span>view Product</span></a>
-                        <a class="btn-slide mt-2 " style="color:green" href="<?= base_url('contact') ?>"><i class="fa fa-shopping-basket" ></i><span>order Product</span></a>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.9s">
-                    <div class="service-item p-4">
-                        <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/service-7.webp" alt="">
-                        </div>
-                        <h4 class="mb-3">Fruit &amp; Vegetable</h4>
-                        <p>Fresh fruits and vegetables sourced for export with attention to quality, safety, and global delivery standards.</p>
-                        <a class="btn-slide mt-2" href="<?= base_url('products/fruit-vegetable') ?>"><i class="fa fa-eye"></i><span>view Product</span></a>
-                        <a class="btn-slide mt-2 " style="color:green" href="<?= base_url('contact') ?>"><i class="fa fa-shopping-basket"></i><span>order Product</span></a>
-                    </div>
-                </div>
+                        <?php $delay = ($delay >= 0.7) ? 0.3 : $delay + 0.2; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -686,74 +626,20 @@
                 <h1 class="mb-5">Expert Team Members</h1>
             </div>
             <div class="row g-4">
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="team-item p-4">
-                        <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/team-1.webp" alt="">
+                <?php if (!empty($team)): ?>
+                    <?php $delay = 0.3; foreach ($team as $m): ?>
+                        <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="<?= $delay ?>s">
+                            <div class="team-item p-4">
+                                <div class="overflow-hidden mb-4" style="height:260px">
+                                    <img class="img-fluid w-100 h-100" style="object-fit:cover" src="<?= base_url(ltrim($m['photo'] ?? 'img/team-1.webp', '/')) ?>" alt="<?= e($m['name']) ?>">
+                                </div>
+                                <h5 class="mb-0"><?= e($m['name']) ?></h5>
+                                <p><?= e($m['role']) ?></p>
+                            </div>
                         </div>
-                        <h5 class="mb-0">Bikash Barat</h5>
-                        <p>Founder & Director</p>
-                        <div class="btn-slide mt-1">
-                            <!-- <i class="fa fa-share"></i>
-                            <span>
-                                <a href="https://www.facebook.com/Bceexport"><i class="fab fa-facebook-f"></i></a>
-                                <a href=""><i class="fa-brands fa-x-twitter"></i></a>
-                                <a href=""><i class="fab fa-instagram"></i></a>
-                            </span> -->
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="team-item p-4">
-                        <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/team-2.webp" alt="">
-                        </div>
-                        <h5 class="mb-0">Manidipa Barat Patar</h5>
-                        <p>Quality Control Inspector</p>
-                        <div class="btn-slide mt-1">
-                            <!--<i class="fa fa-share"></i>-->
-                            <!--<span>-->
-                            <!--    <a href=""><i class="fab fa-facebook-f"></i></a>-->
-                            <!--    <a href=""><i class="fab fa-twitter"></i></a>-->
-                            <!--    <a href=""><i class="fab fa-instagram"></i></a>-->
-                            <!--</span>-->
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="team-item p-4">
-                        <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/team-3.webp" alt="">
-                        </div>
-                        <h5 class="mb-0">Shankha Subhara Pata</h5>
-                        <p>Marketing Spacialist</p>
-                        <div class="btn-slide mt-1">
-                            <!--<i class="fa fa-share"></i>-->
-                            <!--<span>-->
-                            <!--    <a href=""><i class="fab fa-facebook-f"></i></a>-->
-                            <!--    <a href=""><i class="fab fa-twitter"></i></a>-->
-                            <!--    <a href=""><i class="fab fa-instagram"></i></a>-->
-                            <!--</span>-->
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.9s">
-                    <div class="team-item p-4">
-                        <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/team-4.webp" alt="">
-                        </div>
-                        <h5 class="mb-0">Ram Shabe Mukherjee</h5>
-                        <p>Legal Advisor</p>
-                        <div class="btn-slide mt-1">
-                            <!--<i class="fa fa-share"></i>-->
-                            <!--<span>-->
-                            <!--    <a href=""><i class="fab fa-facebook-f"></i></a>-->
-                            <!--    <a href=""><i class="fab fa-twitter"></i></a>-->
-                            <!--    <a href=""><i class="fab fa-instagram"></i></a>-->
-                            <!--</span>-->
-                        </div>
-                    </div>
-                </div>
+                        <?php $delay = ($delay >= 0.9) ? 0.3 : $delay + 0.2; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -767,51 +653,19 @@
                 <h1 class="mb-5">Membership & Certifications</h1>
             </div>
             <div class="owl-carousel certification-carousel">
-                <div class="certification-item p-4">
-                    <div class="certification-card">
-                        <div class="certification-image mb-4">
-                            <img class="img-fluid" src="img/certification-1.png" alt="Certification 1">
+                <?php if (!empty($certificates)): ?>
+                    <?php foreach ($certificates as $cert): ?>
+                        <div class="certification-item p-4">
+                            <div class="certification-card">
+                                <div class="certification-image mb-4" style="height:120px;display:grid;place-items:center">
+                                    <img class="img-fluid" style="max-height:100%;width:auto;object-fit:contain" src="<?= base_url(ltrim($cert['image'] ?? 'img/certification-1.png', '/')) ?>" alt="<?= e($cert['title']) ?>">
+                                </div>
+                                <h5 class="text-center"><?= e($cert['title']) ?></h5>
+                                <p class="text-center text-muted"><?= e($cert['issuer'] ?? '') ?></p>
+                            </div>
                         </div>
-                        <h5 class="text-center">MSME</h5>
-                        <p class="text-center text-muted">Quality Management System</p>
-                    </div>
-                </div>
-                <!-- <div class="certification-item p-4">
-                    <div class="certification-card">
-                        <div class="certification-image mb-4">
-                            <img class="img-fluid" src="img/certification-2.png" alt="Certification 2">
-                        </div>
-                        <h5 class="text-center">APEDA</h5>
-                        <p class="text-center text-muted">Government Approved</p>
-                    </div>
-                </div> -->
-                <div class="certification-item p-4">
-                    <div class="certification-card">
-                        <div class="certification-image mb-4">
-                            <img class="img-fluid" src="img/certification-2.png" alt="Certification 3">
-                        </div>
-                        <h5 class="text-center">APEDA</h5>
-                        <p class="text-center text-muted">Government Approved</p>
-                    </div>
-                </div>
-                <div class="certification-item p-4">
-                    <div class="certification-card">
-                        <div class="certification-image mb-4">
-                            <img class="img-fluid" src="img/certification-3.png" alt="Certification 4">
-                        </div>
-                        <h5 class="text-center">IEC</h5>
-                        <p class="text-center text-muted">Import Export Code</p>
-                    </div>
-                </div>
-                <div class="certification-item p-4">
-                    <div class="certification-card">
-                        <div class="certification-image mb-4">
-                            <img class="img-fluid" src="img/certification-4.png" alt="Certification 5">
-                        </div>
-                        <h5 class="text-center">Trademark</h5>
-                        <p class="text-center text-muted">Protecting brand identity</p>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -825,50 +679,21 @@
                 <h1 class="mb-0">Our Clients Say!</h1>
             </div>
             <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
-                <div class="testimonial-item p-4 my-5">
-                    <i class="fa fa-quote-right fa-3x text-light position-absolute top-0 end-0 mt-n3 me-4"></i>
-                    <div class="d-flex align-items-end mb-4">
-                        <img class="img-fluid flex-shrink-0" src="img/testimonial-1.webp" style="width: 80px; height: 80px;">
-                        <div class="ms-4">
-                            <h5 class="mb-1">Maria Gonzalez</h5>
-                            <p class="m-0">Home Decor Retailer, Spain</p>
+                <?php if (!empty($testimonials)): ?>
+                    <?php foreach ($testimonials as $tst): ?>
+                        <div class="testimonial-item p-4 my-5">
+                            <i class="fa fa-quote-right fa-3x text-light position-absolute top-0 end-0 mt-n3 me-4"></i>
+                            <div class="d-flex align-items-end mb-4">
+                                <img class="img-fluid flex-shrink-0" src="<?= base_url(ltrim($tst['photo'] ?? 'img/testimonial-1.webp', '/')) ?>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;">
+                                <div class="ms-4">
+                                    <h5 class="mb-1"><?= e($tst['name']) ?></h5>
+                                    <p class="m-0"><?= e($tst['company'] ?? $tst['role'] ?? '') ?></p>
+                                </div>
+                            </div>
+                            <p class="mb-0"><?= e($tst['text']) ?></p>
                         </div>
-                    </div>
-                    <p class="mb-0">I appreciate the beautiful Indian handicrafts supplied by BCE Export. Their communication, product quality, and global shipping service make international purchasing simple and trustworthy.</p>
-                </div>
-                <div class="testimonial-item p-4 my-5">
-                    <i class="fa fa-quote-right fa-3x text-light position-absolute top-0 end-0 mt-n3 me-4"></i>
-                    <div class="d-flex align-items-end mb-4">
-                        <img class="img-fluid flex-shrink-0" src="img/testimonial-2.webp" style="width: 80px; height: 80px;">
-                        <div class="ms-4">
-                            <h5 class="mb-1">David Wilson</h5>
-                            <p class="m-0">Wholesale Trader,Canada</p>
-                        </div>
-                    </div>
-                    <p class="mb-0">BCE Export provides reliable sourcing and professional export support. Their handcrafted products are unique, well-packaged, and always delivered on time for my wholesale market.</p>
-                </div>
-                <div class="testimonial-item p-4 my-5">
-                    <i class="fa fa-quote-right fa-3x text-light position-absolute top-0 end-0 mt-n3 me-4"></i>
-                    <div class="d-flex align-items-end mb-4">
-                        <img class="img-fluid flex-shrink-0" src="img/testimonial-3.webp" style="width: 80px; height: 80px;">
-                        <div class="ms-4">
-                            <h5 class="mb-1">Maria Gonzalez</h5>
-                            <p class="m-0">Home Decor Retailer, Spain</p>
-                        </div>
-                    </div>
-                    <p class="mb-0">I appreciate the beautiful Indian handicrafts supplied by BCE Export. Their communication, product quality, and global shipping service make international purchasing simple and trustworthy.</p>
-                </div>
-                <div class="testimonial-item p-4 my-5">
-                    <i class="fa fa-quote-right fa-3x text-light position-absolute top-0 end-0 mt-n3 me-4"></i>
-                    <div class="d-flex align-items-end mb-4">
-                        <img class="img-fluid flex-shrink-0" src="img/testimonial-4.webp" style="width: 80px; height: 80px;">
-                        <div class="ms-4">
-                            <h5 class="mb-1">Emily Carter</h5>
-                            <p class="m-0">Importer, USA</p>
-                        </div>
-                    </div>
-                    <p class="mb-0">Working with BCE Export has been excellent. Their handicrafts quality, secure packaging, and timely delivery help my retail business offer authentic Indian products to customers.</p>
-                </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
     </div>

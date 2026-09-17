@@ -59,7 +59,6 @@ class Seeder
                 'tagline' => 'Excellence in Global Export & Indian Craftsmanship',
                 'description' => 'Leading exporter of Indian Handicrafts, Leather, Jute, Dhokra, Terracotta, Furniture, and Produce.',
                 'logo' => '/img/logo.webp',
-                'favicon' => '/favicon.ico'
             ],
             'contact' => [
                 'phone' => '+91 8900379037',

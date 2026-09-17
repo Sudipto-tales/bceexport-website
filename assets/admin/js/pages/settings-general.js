@@ -28,7 +28,6 @@
                                 F.text({ name: 'tagline', label: 'Tagline', value: general.tagline || '' }),
                                 F.textarea({ name: 'description', label: 'Company Overview / Meta Description', rows: 3, value: general.description || '' }),
                                 F.media({ name: 'logo', label: 'Company Logo (URL or Upload)', value: general.logo || '/img/logo.webp' }),
-                                F.media({ name: 'favicon', label: 'Favicon Icon (URL or Upload)', value: general.favicon || '/img/favicon.png' }),
                             ],
                         })}
                     </div>

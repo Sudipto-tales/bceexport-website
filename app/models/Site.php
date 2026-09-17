@@ -4,9 +4,7 @@
  * Site model helpers — the query layer for BCE Export public pages.
  *
  * Every function here reads from the `settings` table or returns a sensible
- * default. This fills the gap left when the codebase was ported from the
- * Teresa Hospital project — that project had its own model layer; this one
- * starts fresh with exactly what BCE Export needs.
+ * default for BCE Export.
  */
 
 /* ---------------------------------------------------------
@@ -257,12 +255,15 @@ if (!function_exists('get_category_by_slug')) {
 }
 
 if (!function_exists('get_products_by_category')) {
-    function get_products_by_category(int $categoryId): array
+    function get_products_by_category($category): array
     {
         try {
+            $catId = is_array($category) ? ($category['id'] ?? '') : (string) $category;
+            $catSlug = is_array($category) ? ($category['slug'] ?? '') : (string) $category;
+
             return db_fetch_all(
-                'SELECT * FROM products WHERE category_id = ? AND status = ? AND deleted_at IS NULL ORDER BY sort_order ASC',
-                [$categoryId, 'published']
+                'SELECT * FROM products WHERE (category_id = ? OR category_id = ?) AND status = ? AND deleted_at IS NULL ORDER BY sort_order ASC',
+                [(string) $catId, (string) $catSlug, 'published']
             );
         } catch (Throwable $e) {
             return [];

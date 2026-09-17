@@ -18,11 +18,17 @@
                 <?php foreach ($team as $member): ?>
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="<?= $delay ?>s">
                     <div class="team-item p-4">
-                        <div class="overflow-hidden mb-4">
+                        <div class="overflow-hidden mb-4" style="height:260px">
                             <?php if (!empty($member['photo'])): ?>
-                            <img class="img-fluid" src="<?= base_url('img/' . e($member['photo'])) ?>" alt="<?= e($member['name']) ?>">
+                                <?php 
+                                $mPhoto = ltrim($member['photo'], '/');
+                                if (!str_starts_with($mPhoto, 'img/') && !str_starts_with($mPhoto, 'assets/')) {
+                                    $mPhoto = 'img/' . $mPhoto;
+                                }
+                                ?>
+                                <img class="img-fluid w-100 h-100" style="object-fit:cover" src="<?= base_url($mPhoto) ?>" alt="<?= e($member['name']) ?>">
                             <?php else: ?>
-                            <img class="img-fluid" src="<?= base_url('img/placeholder.png') ?>" alt="<?= e($member['name']) ?>">
+                                <img class="img-fluid w-100 h-100" style="object-fit:cover" src="<?= base_url('img/placeholder.png') ?>" alt="<?= e($member['name']) ?>">
                             <?php endif; ?>
                         </div>
                         <h5 class="mb-0"><?= e($member['name']) ?></h5>

@@ -27,7 +27,7 @@ class SettingsController extends ApiController
      * screen renders it. `seo` is the seventh real one — the content model
      * calls popups the sixth, and SEO defaults arrived with the SEO screen.
      */
-    private const GROUPS = ['general', 'contact', 'social', 'integrations', 'theme', 'popups', 'seo'];
+    private const GROUPS = ['general', 'contact', 'social', 'stats', 'integrations', 'theme', 'popups', 'seo'];
 
     /** A setting key has to be a JavaScript property name; the panel indexes by it. */
     private const KEY_PATTERN = '/^[A-Za-z][A-Za-z0-9_]{0,63}$/';

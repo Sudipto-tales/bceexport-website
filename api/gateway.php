@@ -11,6 +11,7 @@ class ApiGatewayProvider extends RouteProvider
             'POST:api/auth/login' => ['AuthController', 'login'],
             'POST:api/auth/logout' => ['AuthController', 'logout', 'session'],
             'GET:api/auth/me' => ['AuthController', 'me', 'session'],
+            'POST:api/auth/verify-password' => ['AuthController', 'verifyPassword', 'session'],
 
             /* Public intake */
             'POST:api/public/enquiry' => ['PublicIntakeController', 'enquiry'],

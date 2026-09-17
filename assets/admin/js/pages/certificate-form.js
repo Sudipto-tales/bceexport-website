@@ -3,7 +3,7 @@
 
     const { util: U, store, fields: F, form: formLib, layout, toast } = window.TMH;
     const params = new URLSearchParams(window.location.search);
-    const certId = params.get('id');
+    const certId = params.get('id') || params.get('slug');
 
     window.TMH.boot(init);
 
@@ -49,15 +49,21 @@
 
             if (!data.slug) data.slug = U.slugify(data.title);
 
-            if (certId) {
-                await store.update('certificates', certId, data);
-                toast.success('Certificate updated');
-            } else {
-                await store.create('certificates', data);
-                toast.success('Certificate added');
-            }
+            try {
+                if (certId) {
+                    await store.update('certificates', certId, data);
+                    toast.success('Certificate updated successfully');
+                } else {
+                    await store.create('certificates', data);
+                    toast.success('Certificate added successfully');
+                }
 
-            window.location.href = 'certificates';
+                setTimeout(() => {
+                    window.location.href = 'certificates';
+                }, 400);
+            } catch (err) {
+                toast.error(err.message || 'Failed to save certificate');
+            }
         });
     }
 }());

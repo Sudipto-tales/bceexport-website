@@ -95,8 +95,8 @@
         return `
         <aside class="sidebar" id="sidebarEl">
             <div class="sidebar__brand">
-                <span class="sidebar__logo"><i class="fa-solid fa-plus"></i></span>
-                <div class="sidebar__name">TMH<small lang="bn">মানুষের সাথে ..... মানুষের পাশে</small></div>
+                <span class="sidebar__logo"><i class="fa-solid fa-earth-americas"></i></span>
+                <div class="sidebar__name">BCE Export<small>Authentic Indian Handicrafts Worldwide</small></div>
             </div>
             <nav class="sidebar__nav" id="navTrack" aria-label="Main">
                 <span class="nav-pill no-anim" id="navPill"></span>

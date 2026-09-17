@@ -206,6 +206,10 @@ class AdminController extends SiteController
     private function screenNotFound(): void
     {
         http_response_code(404);
+        if (Auth::isAuthenticated() && is_file(__BASEDIR__ . '/app/page/admin/404.php')) {
+            render_view('/app/page/admin/404.php');
+            return;
+        }
         header('Content-Type: text/plain; charset=utf-8');
         echo "No such admin screen.\n";
     }
