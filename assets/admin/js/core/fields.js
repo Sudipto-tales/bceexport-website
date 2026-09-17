@@ -49,6 +49,12 @@
         if (o.matchAfter) out.push(`data-match-after="${esc(o.matchAfter)}"`);
         if (o.readonly) out.push('readonly');
         if (o.disabled) out.push('disabled');
+
+        // THIS IS THE IMPORTANT FIX — make existing values appear
+        if (o.value !== undefined && o.value !== null && o.value !== '') {
+            out.push(`value="${esc(o.value)}"`);
+        }
+
         return out.join(' ');
     }
 
@@ -97,16 +103,18 @@
 
         textarea(o) {
             const c = Object.assign({ id: o.name, wide: true }, o);
-            return shell(c, `<textarea ${attrs(c)} rows="${esc(o.rows || 4)}"></textarea>`);
+            return shell(c, `<textarea ${attrs(c)} rows="${esc(o.rows || 4)}">${esc(o.value || '')}</textarea>`);
         },
 
         select(o) {
             if (o.multiple) return F.multiselect(o);
             const c = Object.assign({ id: o.name }, o);
+            const current = o.value !== undefined && o.value !== null ? String(o.value) : '';
             const opts = (o.options || []).map((op) => {
                 const v = typeof op === 'string' ? op : op.value;
                 const l = typeof op === 'string' ? op : op.label;
-                return `<option value="${esc(v)}">${esc(l)}</option>`;
+                const selected = current === String(v) ? ' selected' : '';
+                return `<option value="${esc(v)}"${selected}>${esc(l)}</option>`;
             }).join('');
             return shell(c, `<select ${attrs(c)}>${
                 o.placeholderOption ? `<option value="">${esc(o.placeholderOption)}</option>` : ''}${opts}</select>`);
