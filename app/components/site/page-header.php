@@ -1,15 +1,17 @@
 <?php
 /**
- * Page header / breadcrumb banner component.
+ * Page header / breadcrumb banner.
  *
- * Variables: $pageTitle (string) — displayed in the banner
- *            $breadcrumbs (array) — ['Label' => 'url', ...], last item has no link
+ * $pageTitle   (string)
+ * $breadcrumbs (array)  label => url; last item = current (no link)
+ * $headerClass (string) about | services | Contact | leather | …
  */
-$pageTitle = $pageTitle ?? 'Page';
+$pageTitle   = $pageTitle ?? 'Page';
 $breadcrumbs = $breadcrumbs ?? [];
+$headerClass = $headerClass ?? '';
 ?>
     <!-- Page Header Start -->
-    <div class="container-fluid page-header py-5 mb-5">
+    <div class="container-fluid page-header <?= e($headerClass) ?> py-5" style="margin-bottom: 6rem;">
         <div class="container py-5">
             <h1 class="display-3 text-white mb-3 animated slideInDown"><?= e($pageTitle) ?></h1>
             <nav aria-label="breadcrumb animated slideInDown">

@@ -31,8 +31,12 @@ class PublicController extends BaseController
 
         /* Subpages get a page-header banner with breadcrumbs.
            The homepage has no pageTitle and goes straight to the carousel. */
-        if (!empty($data['pageTitle'])) {
-            App::render('site/page-header', $data);
+        if (($data['showPageHeader'] ?? true) !== false && !empty($data['pageTitle'])) {
+            App::render('site/page-header', [
+                'pageTitle'   => $data['pageTitle']   ?? ($data['title'] ?? 'Page'),
+                'breadcrumbs' => $data['breadcrumbs'] ?? [],
+                'headerClass' => $data['headerClass'] ?? '',
+            ]);
         }
 
         render_view('/app/page/site/' . $body . '.php', array_merge($layoutData, $data));
@@ -49,6 +53,7 @@ class PublicController extends BaseController
     public function home(): void
     {
         $this->page('home', [
+            'showPageHeader' => false,
             'title' => 'BCE Export — Global Export & Import Solutions',
             'categories' => get_categories(),
             'testimonials' => get_testimonials(),
@@ -63,7 +68,8 @@ class PublicController extends BaseController
         $this->page('about', [
             'title' => 'About Us',
             'pageTitle' => 'About Us',
-            'breadcrumbs' => ['About' => base_url('about')],
+            'headerClass' => 'about',
+            'breadcrumbs' => ['About' => ''],
             'team' => get_team_members(),
         ], 'about');
     }
@@ -74,7 +80,8 @@ class PublicController extends BaseController
         $this->page('services', [
             'title' => 'Our Services',
             'pageTitle' => 'Services',
-            'breadcrumbs' => ['Services' => base_url('services')],
+            'headerClass' => 'services',
+            'breadcrumbs' => ['Services' => ''],
             'testimonials' => get_testimonials(),
         ], 'services');
     }
@@ -85,7 +92,8 @@ class PublicController extends BaseController
         $this->page('contact', [
             'title' => 'Contact Us',
             'pageTitle' => 'Contact Us',
-            'breadcrumbs' => ['Contact' => base_url('contact')],
+            'headerClass' => 'Contact',
+            'breadcrumbs' => ['Contact' => ''],
         ], 'contact');
     }
 
@@ -95,7 +103,8 @@ class PublicController extends BaseController
         $this->page('quote', [
             'title' => 'Request a Quote',
             'pageTitle' => 'Free Quote',
-            'breadcrumbs' => ['Quote' => base_url('quote')],
+            'headerClass' => '',
+            'breadcrumbs' => ['Quote' => ''],
         ], 'contact');
     }
 
@@ -105,7 +114,8 @@ class PublicController extends BaseController
         $this->page('team', [
             'title' => 'Our Team',
             'pageTitle' => 'Our Team',
-            'breadcrumbs' => ['Team' => base_url('team')],
+            'headerClass' => '',
+            'breadcrumbs' => ['Team' => ''],
             'team' => get_team_members(),
         ], 'about');
     }
@@ -116,7 +126,8 @@ class PublicController extends BaseController
         $this->page('testimonials', [
             'title' => 'Client Testimonials',
             'pageTitle' => 'Testimonials',
-            'breadcrumbs' => ['Testimonials' => base_url('testimonials')],
+            'headerClass' => '',
+            'breadcrumbs' => ['Testimonials' => ''],
             'testimonials' => get_testimonials(),
         ], 'about');
     }
@@ -142,12 +153,28 @@ class PublicController extends BaseController
 
         $products = get_products_by_category($category);
 
+        $classMap = [
+            'leather'           => 'leather',
+            'handicraft'        => 'Handicraft',
+            'wooden-handicraft' => 'Handicraft',
+            'wooden_handicraft' => 'Handicraft',
+            'furniture'         => 'Furniture',
+            'jute'              => 'Jute',
+            'dhokra'            => 'Dhokra',
+            'terracotta'        => 'Terracotta',
+            'fruit'             => 'Fruit',
+            'fruit-vegetable'   => 'Fruit',
+            'fruit_vegetable'   => 'Fruit',
+        ];
+        $headerClass = $classMap[strtolower($slug)] ?? '';
+
         $this->page('category', [
             'title' => $category['name'],
             'pageTitle' => $category['name'] . ' Products',
+            'headerClass' => $headerClass,
             'breadcrumbs' => [
-                'Products' => '#',
-                $category['name'] => base_url('products/' . $slug),
+                'Products' => base_url('/#categories'),
+                $category['name'] => '',
             ],
             'category' => $category,
             'products' => $products,
@@ -161,7 +188,8 @@ class PublicController extends BaseController
         $this->page('404', [
             'title' => 'Page Not Found',
             'pageTitle' => '404 — Page Not Found',
-            'breadcrumbs' => ['404' => '#'],
+            'headerClass' => '',
+            'breadcrumbs' => ['404' => ''],
         ]);
     }
 }

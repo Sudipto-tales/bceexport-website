@@ -63,6 +63,14 @@ abstract class SiteController extends BaseController
         App::render('site/layout/head', $head);
         App::render('site/layout/header', $header);
 
+        if (($data['showPageHeader'] ?? true) !== false) {
+            App::render('site/page-header', [
+                'pageTitle'   => $data['pageTitle']   ?? ($data['head']['title'] ?? 'Page'),
+                'breadcrumbs' => $data['breadcrumbs'] ?? [],
+                'headerClass' => $data['headerClass'] ?? '',
+            ]);
+        }
+
         echo "\n    <main id=\"top\">\n";
         render_view('/app/page/site/' . $body . '.php', $data);
         echo "\n    </main>\n\n";

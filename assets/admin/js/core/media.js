@@ -44,12 +44,14 @@
     }
 
     function paintAll(scope, record) {
-        [...(scope || document).querySelectorAll('[data-media]')].forEach((el) => {
+        const host = scope || document;
+        [...host.querySelectorAll('[data-media]')].forEach((el) => {
             const input = hiddenFor(el);
             const url = (record && record[el.dataset.media]) || (input && input.value) || '';
             if (input) input.value = url;
             paint(el, url);
         });
+        wire(host); // attach click handlers after painting
     }
 
     /* ---------------------------------------------------------
