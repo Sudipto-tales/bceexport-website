@@ -67,9 +67,11 @@ class PublicController extends BaseController
     {
         $this->page('about', [
             'title' => 'About Us',
+            'description' => 'Learn about BCE Export — wholesale exporter of authentic Indian handicrafts, Dhokra, terracotta, leather and jute from Bankura, West Bengal.',
             'pageTitle' => 'About Us',
             'headerClass' => 'about',
             'breadcrumbs' => ['About' => ''],
+            'ogImage' => base_url('img/about01.webp'),
             'team' => get_team_members(),
         ], 'about');
     }
@@ -79,9 +81,11 @@ class PublicController extends BaseController
     {
         $this->page('services', [
             'title' => 'Our Services',
+            'description' => 'Worldwide air & sea freight, customs clearance, secure packaging, and supply chain management by BCE Export.',
             'pageTitle' => 'Services',
             'headerClass' => 'services',
             'breadcrumbs' => ['Services' => ''],
+            'ogImage' => base_url('img/services01.webp'),
             'testimonials' => get_testimonials(),
         ], 'services');
     }
@@ -91,9 +95,11 @@ class PublicController extends BaseController
     {
         $this->page('contact', [
             'title' => 'Contact Us',
+            'description' => 'Get in touch with BCE Export for wholesale handicraft inquiries, product quotations, sample orders, and global export shipping details.',
             'pageTitle' => 'Contact Us',
             'headerClass' => 'Contact',
             'breadcrumbs' => ['Contact' => ''],
+            'ogImage' => base_url('img/Contact.webp'),
         ], 'contact');
     }
 
@@ -102,9 +108,11 @@ class PublicController extends BaseController
     {
         $this->page('quote', [
             'title' => 'Request a Quote',
+            'description' => 'Request a free price quote for bulk and wholesale orders of Indian handicrafts, Dhokra, terracotta, leather, and jute from BCE Export.',
             'pageTitle' => 'Free Quote',
             'headerClass' => '',
             'breadcrumbs' => ['Quote' => ''],
+            'ogImage' => base_url('img/about01.webp'),
         ], 'contact');
     }
 
@@ -113,9 +121,11 @@ class PublicController extends BaseController
     {
         $this->page('team', [
             'title' => 'Our Team',
+            'description' => 'Meet the experienced team and leadership driving BCE Export — delivering quality Indian handicrafts and goods worldwide.',
             'pageTitle' => 'Our Team',
             'headerClass' => '',
             'breadcrumbs' => ['Team' => ''],
+            'ogImage' => base_url('img/about01.webp'),
             'team' => get_team_members(),
         ], 'about');
     }
@@ -125,9 +135,11 @@ class PublicController extends BaseController
     {
         $this->page('testimonials', [
             'title' => 'Client Testimonials',
+            'description' => 'Read testimonials and reviews from global buyers and importers who trust BCE Export for authentic Indian handicrafts.',
             'pageTitle' => 'Testimonials',
             'headerClass' => '',
             'breadcrumbs' => ['Testimonials' => ''],
+            'ogImage' => base_url('img/about01.webp'),
             'testimonials' => get_testimonials(),
         ], 'about');
     }
@@ -168,14 +180,23 @@ class PublicController extends BaseController
         ];
         $headerClass = $classMap[strtolower($slug)] ?? '';
 
+        $catImage = !empty($category['image'])
+            ? site_url($category['image'])
+            : base_url('img/' . ($headerClass ? $headerClass . '01.webp' : 'about.webp'));
+
         $this->page('category', [
             'title' => $category['name'],
+            'description' => !empty($category['description'])
+                ? strip_tags($category['description'])
+                : 'Wholesale exporter of authentic Indian ' . $category['name'] . ' products from Bankura, West Bengal.',
             'pageTitle' => $category['name'] . ' Products',
             'headerClass' => $headerClass,
             'breadcrumbs' => [
                 'Products' => base_url('/#categories'),
                 $category['name'] => '',
             ],
+            'ogType' => 'product',
+            'ogImage' => $catImage,
             'category' => $category,
             'products' => $products,
         ], 'products');

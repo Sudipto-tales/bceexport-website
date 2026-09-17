@@ -6,6 +6,9 @@
  */
 $siteName = $title ?? 'BCE Export';
 $pageDescription = $description ?? 'Leading exporter of Indian Handicrafts, Leather, Jute, Dhokra, Terracotta, Furniture, and Produce.';
+$currentRoute = trim((string) ($_GET['route'] ?? ''), '/');
+$canonicalUrl = $canonical ?? base_url($currentRoute ? '/' . $currentRoute : '/');
+$ogImg = $ogImage ?? base_url('img/about.webp');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +18,52 @@ $pageDescription = $description ?? 'Leading exporter of Indian Handicrafts, Leat
     <title><?= e($siteName) ?> | BCE Export</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="<?= e($pageDescription) ?>" name="description">
-    <meta content="BCE Export, Indian Handicrafts, Export, Leather, Jute, Dhokra, Terracotta, Furniture" name="keywords">
+    <meta content="BCE Export, Indian Handicrafts, Export, Leather, Jute, Dhokra, Terracotta, Furniture, Bankura" name="keywords">
+
+    <link rel="canonical" href="<?= e($canonicalUrl) ?>">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="google-site-verification" content="yhUfttoPHNlNl12fLy1nd-gCTwiZ9Kj6rI3y8Y0fLb4">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="<?= e($ogType ?? 'website') ?>">
+    <meta property="og:site_name" content="BCE Export">
+    <meta property="og:title" content="<?= e($siteName) ?> | BCE Export">
+    <meta property="og:description" content="<?= e($pageDescription) ?>">
+    <meta property="og:url" content="<?= e($canonicalUrl) ?>">
+    <meta property="og:image" content="<?= e($ogImg) ?>">
+    <meta property="og:locale" content="en_IN">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= e($siteName) ?> | BCE Export">
+    <meta name="twitter:description" content="<?= e($pageDescription) ?>">
+    <meta name="twitter:image" content="<?= e($ogImg) ?>">
+
+    <meta name="geo.region" content="IN-WB">
+    <meta name="geo.placename" content="Bankura, West Bengal">
+    <meta name="author" content="BCE Export">
+
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "BCE Export",
+      "alternateName": ["Bceexport", "BCE Exports"],
+      "url": "https://www.bceexport.com/",
+      "logo": "https://www.bceexport.com/img/logo.webp",
+      "email": "admin@bceexport.com",
+      "telephone": "+91-8900379037",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Arabindanagar (N)",
+        "addressLocality": "Bankura",
+        "addressRegion": "West Bengal",
+        "postalCode": "722101",
+        "addressCountry": "IN"
+      }
+    }
+    </script>
 
 
     <!-- Google Web Fonts -->

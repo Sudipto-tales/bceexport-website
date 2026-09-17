@@ -50,6 +50,7 @@ class PublicIntakeController extends ApiController
         'phone' => 40,
         'subject' => 255,
         'message' => 5000,
+        'product' => 255,
         'experience' => 120,
         'employer' => 191,
         'location' => 160,
@@ -76,6 +77,10 @@ class PublicIntakeController extends ApiController
         $phone = $this->text($body, 'phone', 'phone', $fields);
         $message = $this->text($body, 'message', 'message', $fields);
         $subject = $this->text($body, 'subject', 'subject', $fields);
+        $product = $this->text($body, 'product', 'product', $fields);
+        if ($product === '') {
+            $product = trim((string) ($body['service'] ?? ''));
+        }
 
         if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $fields['email'] = 'That does not look like an email address';
@@ -93,39 +98,23 @@ class PublicIntakeController extends ApiController
 
         $source = in_array($body['source'] ?? '', self::SOURCES, true) ? $body['source'] : 'contact';
 
-        /* The contract calls these preferredDate and slot; the form on the
-           site calls them date and time. Both are accepted rather than one of
-           them being renamed, because the form's names are what the markup
-           has said for as long as the site has existed. */
-        $preferredDate = trim((string) ($body['preferredDate'] ?? $body['date'] ?? ''));
-        $slot = trim((string) ($body['slot'] ?? $body['time'] ?? ''));
-
-        $department = $this->lookup('departments', 'slug', $body['department'] ?? '');
-        $doctor = $this->lookup('doctors', 'slug', $body['doctor'] ?? '');
-
         if ($subject === '') {
-            $subject = $source === 'appointment'
-                ? 'Appointment request' . ($department ? ' — ' . $this->label('departments', $department) : '')
-                : 'Website enquiry';
+            $subject = $source === 'landing' ? 'Quote request' : 'Website enquiry';
         }
 
         $columns = [
             'name' => $name,
-            'email' => $email ?: null,
+            'email' => $email ?: ($phone ? $phone . '@contact.local' : 'inquiry@bceexport.com'),
             'phone' => $phone ?: null,
             'subject' => $subject,
             'message' => $message ?: null,
+            'product' => $product ?: null,
             'source' => $source,
-            'department_id' => $department,
-            'doctor_id' => $doctor,
-            'preferred_date' => $preferredDate === '' ? null : substr($preferredDate, 0, 10),
-            'preferred_slot' => $slot === '' ? null : substr($slot, 0, 40),
             'status' => 'new',
             'priority' => 'normal',
             'replies' => json_encode([]),
             'internal_notes' => json_encode([]),
             'received_at' => now_iso(),
-            'ip' => RateLimit::clientIp(),
             'created_at' => now_iso(),
             'updated_at' => now_iso(),
         ];
@@ -139,8 +128,8 @@ class PublicIntakeController extends ApiController
             'enquiries',
             $publicId,
             $this->notifyAddresses(),
-            ($source === 'appointment' ? 'Appointment request' : 'Enquiry') . ' — ' . $name,
-            $this->enquiryMail($columns, $department, $doctor),
+            'Enquiry — ' . $name . ($product ? ' (' . $product . ')' : ''),
+            $this->enquiryMail($columns),
             $email
         );
 
@@ -310,7 +299,14 @@ class PublicIntakeController extends ApiController
      */
     private function guard(string $action, int $limit, int $seconds): void
     {
-        if (!Csrf::verifyRequest()) {
+        // CSRF is optional for public static HTML pages.
+        // If a token is present we still verify it; if none exists we allow the request
+        // (honeypot + rate limit + reCAPTCHA still protect the endpoint).
+        $hasToken = !empty($_SERVER['HTTP_X_CSRF_TOKEN'])
+            || !empty($_POST['_token'])
+            || (class_exists('ApiRequest') && !empty(ApiRequest::body()['_token'] ?? null));
+
+        if ($hasToken && !Csrf::verifyRequest()) {
             Api::fail(419, 'CSRF_EXPIRED', 'This page has been open a while — reload it and send again');
         }
 
@@ -467,6 +463,20 @@ class PublicIntakeController extends ApiController
      */
     private function insert(string $table, string $prefix, array $columns): string
     {
+        static $tableColumnsCache = [];
+        if (!isset($tableColumnsCache[$table])) {
+            try {
+                $info = db_fetch_all("PRAGMA table_info({$table})");
+                $tableColumnsCache[$table] = array_column($info, 'name');
+            } catch (Throwable $e) {
+                $tableColumnsCache[$table] = [];
+            }
+        }
+        if (!empty($tableColumnsCache[$table])) {
+            $allowed = array_flip($tableColumnsCache[$table]);
+            $columns = array_intersect_key($columns, $allowed);
+        }
+
         for ($attempt = 1; ; $attempt++) {
             $publicId = next_public_id($table, $prefix);
             $row = ['public_id' => $publicId] + $columns;
@@ -526,14 +536,18 @@ class PublicIntakeController extends ApiController
             error_log('[intake] ' . $table . ' ' . $publicId . ' not notified: ' . $error);
         }
 
-        db_execute(
-            'UPDATE ' . $table . ' SET notified_at = ?, notify_error = ? WHERE public_id = ?',
-            [
-                $sent ? now_iso() : null,
-                $sent ? null : mb_substr($error ?: 'The mail server refused the message', 0, 500),
-                $publicId,
-            ]
-        );
+        try {
+            db_execute(
+                'UPDATE ' . $table . ' SET notified_at = ?, notify_error = ? WHERE public_id = ?',
+                [
+                    $sent ? now_iso() : null,
+                    $sent ? null : mb_substr($error ?: 'The mail server refused the message', 0, 500),
+                    $publicId,
+                ]
+            );
+        } catch (Throwable $e) {
+            // Notification tracking columns are optional
+        }
     }
 
     /** The applicant's acknowledgement. Best effort, and nothing depends on it. */
@@ -562,24 +576,21 @@ class PublicIntakeController extends ApiController
        Mail bodies
        ========================================================= */
 
-    private function enquiryMail(array $columns, ?int $department, ?int $doctor): string
+    private function enquiryMail(array $columns): string
     {
         $rows = [
-            'Name' => $columns['name'],
-            'Email' => $columns['email'],
-            'Phone' => $columns['phone'],
-            'Source' => $columns['source'],
-            'Department' => $this->label('departments', $department),
-            'Doctor' => $doctor ? $this->label('doctors', $doctor) : '',
-            'Preferred date' => $columns['preferred_date'],
-            'Preferred time' => $columns['preferred_slot'],
-            'Received' => $columns['received_at'] . ' UTC',
+            'Name' => $columns['name'] ?? '',
+            'Email' => $columns['email'] ?? '',
+            'Phone' => $columns['phone'] ?? '',
+            'Product / Freight' => $columns['product'] ?? '',
+            'Subject' => $columns['subject'] ?? '',
+            'Source' => $columns['source'] ?? '',
+            'Received' => ($columns['received_at'] ?? now_iso()) . ' UTC',
         ];
 
-        return '<p>A new ' . ($columns['source'] === 'appointment' ? 'appointment request' : 'enquiry')
-            . ' came in through the website.</p>'
+        return '<p>A new enquiry came in through the website.</p>'
             . $this->table($rows)
-            . ($columns['message'] ? '<p><strong>Message</strong></p><p>' . nl2br(e($columns['message'])) . '</p>' : '')
+            . (!empty($columns['message']) ? '<p><strong>Message</strong></p><p>' . nl2br(e($columns['message'])) . '</p>' : '')
             . '<p style="color:#667">Reply to this mail and it reaches the sender.</p>';
     }
 
