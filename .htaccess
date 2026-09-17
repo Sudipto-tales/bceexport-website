@@ -1,0 +1,36 @@
+RewriteEngine On
+RewriteBase /
+
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteRule ^index\.php$ - [L]
+
+RewriteRule ^composer\.(json|lock)$ - [F,L]
+RewriteRule ^\.env - [F,L]
+RewriteRule ^(database|config|core|app|docs)/ - [F,L]
+
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^api/ - [F,L]
+
+RewriteRule ^\.git - [F,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?route=$1 [L,QSA]
+
+<FilesMatch "^(\.env|\.env\.example|composer\.(json|lock)|README\.md)$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "^\.ht">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "\.(sqlite|sqlite3|db)(-wal|-shm|-journal)?$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
