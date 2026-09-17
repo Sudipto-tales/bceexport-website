@@ -26,12 +26,12 @@
        it. Adding an image field to a form means adding it here too — the
        alternative is a delete that silently breaks a page. */
     const REFS = [
-        { entity: 'doctors', label: 'Doctor', fields: ['photo'], name: (r) => r.name, href: (r) => `doctor-form?id=${encodeURIComponent(r.id)}` },
-        { entity: 'leadership', label: 'Leadership', fields: ['photo'], name: (r) => r.name, href: (r) => `leadership-form?id=${encodeURIComponent(r.id)}` },
-        { entity: 'departments', label: 'Department', fields: ['banner', 'introImg'], name: (r) => r.name, href: (r) => `department-form?id=${encodeURIComponent(r.id)}` },
-        { entity: 'posts', label: 'Blog post', fields: ['coverImage'], name: (r) => r.title, href: (r) => `blog-form?id=${encodeURIComponent(r.id)}` },
+        { entity: 'products', label: 'Product', fields: ['image'], name: (r) => r.name, href: (r) => `product-form?id=${encodeURIComponent(r.id)}` },
+        { entity: 'team-members', label: 'Team Member', fields: ['photo'], name: (r) => r.name, href: (r) => `team-form?id=${encodeURIComponent(r.id)}` },
+        { entity: 'certificates', label: 'Certificate', fields: ['image'], name: (r) => r.title, href: (r) => `certificate-form?id=${encodeURIComponent(r.id)}` },
+        { entity: 'categories', label: 'Category', fields: ['image'], name: (r) => r.name, href: () => 'categories' },
         { entity: 'testimonials', label: 'Testimonial', fields: ['photo'], name: (r) => `${r.name}’s quote`, href: () => 'testimonials' },
-        { entity: 'facilities', label: 'Facility', fields: ['image'], name: (r) => r.title, href: () => 'facilities' },
+        { entity: 'posts', label: 'Blog post', fields: ['coverImage'], name: (r) => r.title, href: (r) => `blog-form?id=${encodeURIComponent(r.id)}` },
     ];
 
     const FILTERS = [
@@ -338,7 +338,7 @@
              data-id="${U.esc(row.id)}" role="button" tabindex="0"
              aria-selected="${picked}" aria-label="${U.esc(row.filename)}">
             ${isImage(row)
-                ? `<img src="${U.esc(row.url)}" alt="${U.esc(row.alt || row.filename)}" loading="lazy">`
+                ? `<img src="${U.esc(U.mediaUrl(row.url))}" alt="${U.esc(row.alt || row.filename)}" loading="lazy">`
                 : `<span class="media-tile__doc"><i class="fa-solid fa-file-lines"></i><b>${U.esc(extOf(row))}</b></span>`}
 
             <label class="media-tile__check">
@@ -521,7 +521,7 @@
             html: `
                 <div class="col gap-4">
                     ${isImage(row)
-                        ? `<img src="${U.esc(row.url)}" alt="${U.esc(row.alt || row.filename)}"
+                        ? `<img src="${U.esc(U.mediaUrl(row.url))}" alt="${U.esc(row.alt || row.filename)}"
                                 style="width:100%;border-radius:var(--radius-sm);background:var(--surface-3)">`
                         : `<div class="media-tile media-tile--doc" style="aspect-ratio:16/9;cursor:default">
                                <span class="media-tile__doc"><i class="fa-solid fa-file-lines"></i><b>${U.esc(extOf(row))}</b></span>
@@ -538,7 +538,7 @@
                         <label for="dAlt">Alt text <span class="field__req">*</span></label>
                         <input type="text" id="dAlt" value="${U.esc(row.alt)}"
                                placeholder="What somebody who cannot see it would need told">
-                        <small>Describe the picture, not the file. “Nurse checking on a patient” — not “ward.jpg”.</small>
+                        <small>Describe the picture, not the file. “Handcrafted terracotta vase” — not “vase.jpg”.</small>
                     </div>
 
                     <div class="field">

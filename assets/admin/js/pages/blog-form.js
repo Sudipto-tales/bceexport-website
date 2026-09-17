@@ -205,7 +205,7 @@
             const title = d.metaTitle || d.title || 'Untitled post';
             const desc = d.metaDescription || d.excerpt || '';
             document.getElementById('serp').innerHTML = `
-                <div class="text-xs muted">teresamemorialhospital.com › blog › ${U.esc(d.id || 'slug')}</div>
+                <div class="text-xs muted">bceexport.com › blog › ${U.esc(d.id || 'slug')}</div>
                 <div style="color:#1a0dab;font-size:1rem;line-height:1.3;margin:2px 0">${U.esc(title.slice(0, 60))}${title.length > 60 ? '…' : ''}</div>
                 <div class="text-sm mid">${U.esc(desc.slice(0, 155))}${desc.length > 155 ? '…' : ''}</div>`;
         };

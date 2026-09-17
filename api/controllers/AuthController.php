@@ -158,9 +158,12 @@ class AuthController extends ApiController
             return [];
         }
 
-        $raw = db_scalar('SELECT permissions FROM roles WHERE id = ?', [$user['role_id']]);
-
-        return json_column($raw);
+        try {
+            $raw = db_scalar('SELECT permissions FROM roles WHERE id = ?', [$user['role_id']]);
+            return json_column($raw);
+        } catch (Throwable $e) {
+            return [];
+        }
     }
 
     /**
@@ -195,7 +198,7 @@ class AuthController extends ApiController
 
             Mailer::send(
                 $user['email'],
-                'Reset your Teresa Memorial admin password',
+                'Reset your BCE Export admin password',
                 '<p>Hello ' . e($user['name']) . ',</p>'
                 . '<p>Somebody asked to reset the password on your admin account. '
                 . 'If that was you, <a href="' . e($link) . '">choose a new one</a>. '

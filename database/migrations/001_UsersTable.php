@@ -16,6 +16,9 @@ class UsersTable extends Migration
             'landing_page VARCHAR(100) DEFAULT "dashboard"',
             'status VARCHAR(50) DEFAULT "active"',
             'sort_order INT DEFAULT 0',
+            'remember_token VARCHAR(255)',
+            'reset_token VARCHAR(255)',
+            'last_active_at DATETIME',
             $this->timestamps(),
         ]);
 

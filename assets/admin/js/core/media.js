@@ -29,7 +29,7 @@
         const has = !!url;
         el.innerHTML = `
             ${has
-                ? `<img class="media-pick__thumb" src="${esc(url)}" alt="">`
+                ? `<img class="media-pick__thumb" src="${esc(U.mediaUrl(url))}" alt="">`
                 : '<span class="media-pick__thumb"><i class="fa-solid fa-image"></i></span>'}
             <div class="media-pick__meta">
                 <b>${has ? 'Change image' : 'Choose an image'}</b>
@@ -188,7 +188,7 @@
                     grid.innerHTML = list.length ? list.map((m) => `
                         <div class="media-tile" data-url="${esc(m.url)}"
                              aria-selected="${selected === m.url}" role="button" tabindex="0">
-                            <img src="${esc(m.url)}" alt="${esc(m.alt || m.filename)}" loading="lazy">
+                            <img src="${esc(U.mediaUrl(m.url))}" alt="${esc(m.alt || m.filename)}" loading="lazy">
                             ${!m.alt ? '<span class="media-tile__flag">No alt</span>' : ''}
                             <span class="media-tile__bar">${esc(m.filename)}</span>
                         </div>`).join('')

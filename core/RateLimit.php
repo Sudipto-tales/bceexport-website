@@ -14,6 +14,26 @@
  */
 class RateLimit
 {
+    private static function ensureTable(): void
+    {
+        static $checked = false;
+        if ($checked) {
+            return;
+        }
+
+        try {
+            db_execute('CREATE TABLE IF NOT EXISTS rate_limits (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                action VARCHAR(50) NOT NULL,
+                client_key VARCHAR(100) NOT NULL,
+                created_at DATETIME NOT NULL
+            )');
+            $checked = true;
+        } catch (Throwable $e) {
+            // Ignored
+        }
+    }
+
     /**
      * @param string $action  'enquiry', 'application', 'login'
      * @param int    $limit   attempts allowed in the window
@@ -21,25 +41,37 @@ class RateLimit
      */
     public static function tooMany(string $action, int $limit, int $seconds = 3600, ?string $key = null): bool
     {
+        self::ensureTable();
+
         $key = $key ?? self::clientIp();
         $windowStart = gmdate('Y-m-d H:i:s', time() - $seconds);
 
         self::prune();
 
-        $row = db_fetch_one(
-            'SELECT COUNT(*) AS hits FROM rate_limits WHERE action = ? AND client_key = ? AND created_at >= ?',
-            [$action, $key, $windowStart]
-        );
+        try {
+            $row = db_fetch_one(
+                'SELECT COUNT(*) AS hits FROM rate_limits WHERE action = ? AND client_key = ? AND created_at >= ?',
+                [$action, $key, $windowStart]
+            );
 
-        return (int) ($row['hits'] ?? 0) >= $limit;
+            return (int) ($row['hits'] ?? 0) >= $limit;
+        } catch (Throwable $e) {
+            return false;
+        }
     }
 
     public static function hit(string $action, ?string $key = null): void
     {
-        db_execute(
-            'INSERT INTO rate_limits (action, client_key, created_at) VALUES (?, ?, ?)',
-            [$action, $key ?? self::clientIp(), now_iso()]
-        );
+        self::ensureTable();
+
+        try {
+            db_execute(
+                'INSERT INTO rate_limits (action, client_key, created_at) VALUES (?, ?, ?)',
+                [$action, $key ?? self::clientIp(), now_iso()]
+            );
+        } catch (Throwable $e) {
+            // Ignored
+        }
     }
 
     /**
@@ -63,10 +95,14 @@ class RateLimit
     /** Wipes an action's history for this client — call after a successful login. */
     public static function clear(string $action, ?string $key = null): void
     {
-        db_execute(
-            'DELETE FROM rate_limits WHERE action = ? AND client_key = ?',
-            [$action, $key ?? self::clientIp()]
-        );
+        try {
+            db_execute(
+                'DELETE FROM rate_limits WHERE action = ? AND client_key = ?',
+                [$action, $key ?? self::clientIp()]
+            );
+        } catch (Throwable $e) {
+            // Ignored
+        }
     }
 
     /**

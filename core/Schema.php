@@ -68,10 +68,10 @@ final class Schema
      */
     public static function organisation(): array
     {
-        $name = (string) setting('general', 'name', 'Teresa Memorial Hospital');
+        $name = (string) setting('general', 'site_name', 'BCE Export');
         $phone = site_primary_phone();
         $email = site_primary_email();
-        $logo = site_url((string) setting('general', 'logo', ''), base_url('assets/logo-teresa.png'));
+        $logo = site_url((string) setting('general', 'logo', ''), base_url('img/logo.webp'));
 
         $node = [
             '@type' => ['Hospital', 'MedicalOrganization'],
@@ -139,7 +139,7 @@ final class Schema
             '@type' => 'WebSite',
             '@id' => self::id('website'),
             'url' => self::siteUrl(),
-            'name' => (string) setting('general', 'name', 'Teresa Memorial Hospital'),
+            'name' => (string) setting('general', 'site_name', 'BCE Export'),
             'inLanguage' => 'en-IN',
             'publisher' => ['@id' => self::id('organisation')],
             'creator' => [

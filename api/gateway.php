@@ -28,6 +28,7 @@ class ApiGatewayProvider extends RouteProvider
             /* Dashboard & Bootstrap */
             'GET:api/bootstrap' => ['BootstrapController', 'index', 'session'],
             'GET:api/dashboard/summary' => ['DashboardController', 'summary', 'session'],
+            'GET:api/pages' => ['PageController', 'index', 'session'],
 
             /* Generic Resource Block */
             'POST:api/{resource}/reorder' => ['ResourceController', 'reorder', 'session'],

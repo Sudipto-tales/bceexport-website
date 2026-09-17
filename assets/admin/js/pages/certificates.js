@@ -22,11 +22,21 @@
         const certs = await store.all('certificates');
 
         document.getElementById('view').innerHTML = `
-            <div class="grid grid--4 gap-4">
+            <div class="card anim-item mb-4">
+                <div class="card__body p-3 row gap-2 items-center">
+                    <div class="toolbar__search grow" style="max-width:320px">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="search" id="certSearch" placeholder="Search certificates...">
+                    </div>
+                    <span class="muted text-sm ml-auto">${certs.length} certificate${certs.length === 1 ? '' : 's'}</span>
+                </div>
+            </div>
+
+            <div class="grid grid--4 gap-4" id="certGrid">
                 ${certs.map((c) => `
-                    <article class="card anim-item text-center">
+                    <article class="card anim-item text-center cert-card" data-search="${U.esc((c.title + ' ' + (c.issuer || '')).toLowerCase())}">
                         <div class="card__body col items-center gap-3">
-                            ${c.image ? `<img src="${U.esc(c.image)}" alt="" style="width:100%;height:140px;object-fit:contain;border-radius:var(--radius-sm);background:var(--surface-2);padding:8px">` : `<div style="width:100%;height:140px;display:grid;place-items:center;background:var(--surface-2);border-radius:var(--radius-sm)"><i class="fa-solid fa-certificate" style="font-size:40px;color:var(--text-mid)"></i></div>`}
+                            ${c.image ? `<img src="${U.esc(U.mediaUrl(c.image))}" alt="" style="width:100%;height:140px;object-fit:contain;border-radius:var(--radius-sm);background:var(--surface-2);padding:8px">` : `<div style="width:100%;height:140px;display:grid;place-items:center;background:var(--surface-2);border-radius:var(--radius-sm)"><i class="fa-solid fa-certificate" style="font-size:40px;color:var(--text-mid)"></i></div>`}
                             <div>
                                 <h4 class="m-0">${U.esc(c.title)}</h4>
                                 <small class="muted">${U.esc(c.issuer || '')}</small>
@@ -41,6 +51,18 @@
             </div>`;
 
         U.stagger(document.getElementById('view'));
+
+        const searchInput = document.getElementById('certSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const q = e.target.value.toLowerCase().trim();
+                const cards = document.querySelectorAll('#certGrid .cert-card');
+                cards.forEach((card) => {
+                    const haystack = card.dataset.search || card.textContent.toLowerCase();
+                    card.style.display = haystack.includes(q) ? '' : 'none';
+                });
+            });
+        }
 
         document.getElementById('view').querySelectorAll('[data-act="delete"]').forEach((btn) => {
             btn.addEventListener('click', async () => {

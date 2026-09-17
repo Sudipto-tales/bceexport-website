@@ -23,16 +23,26 @@
         const testimonials = await store.all('testimonials');
 
         document.getElementById('view').innerHTML = `
-            <div class="grid grid--3 gap-4">
+            <div class="card anim-item mb-4">
+                <div class="card__body p-3 row gap-2 items-center">
+                    <div class="toolbar__search grow" style="max-width:320px">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="search" id="testiSearch" placeholder="Search testimonials...">
+                    </div>
+                    <span class="muted text-sm ml-auto">${testimonials.length} testimonial${testimonials.length === 1 ? '' : 's'}</span>
+                </div>
+            </div>
+
+            <div class="grid grid--3 gap-4" id="testiGrid">
                 ${testimonials.map((t) => `
-                    <article class="card anim-item">
+                    <article class="card anim-item testi-card" data-search="${U.esc((t.name + ' ' + (t.company || '') + ' ' + (t.text || '')).toLowerCase())}">
                         <div class="card__body col gap-3">
                             <div class="row gap-2 text-gold">
                                 ${'<i class="fa-solid fa-star"></i>'.repeat(t.rating || 5)}
                             </div>
                             <p class="text-sm m-0 italic">"${U.esc(t.text)}"</p>
                             <div class="row gap-3 items-center pt-2 border-top">
-                                ${t.photo ? `<img src="${U.esc(t.photo)}" alt="" style="width:40px;height:40px;object-fit:cover;border-radius:50%">` : `<span class="avatar" style="width:40px;height:40px;display:grid;place-items:center;border-radius:50%">${U.esc(U.initials(t.name))}</span>`}
+                                ${t.photo ? `<img src="${U.esc(U.mediaUrl(t.photo))}" alt="" style="width:40px;height:40px;object-fit:cover;border-radius:50%">` : `<span class="avatar" style="width:40px;height:40px;display:grid;place-items:center;border-radius:50%">${U.esc(U.initials(t.name))}</span>`}
                                 <div class="grow">
                                     <b class="text-sm">${U.esc(t.name)}</b><br>
                                     <small class="muted">${U.esc(t.company || t.role || '')}</small>
@@ -46,6 +56,18 @@
             </div>`;
 
         U.stagger(document.getElementById('view'));
+
+        const searchInput = document.getElementById('testiSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const q = e.target.value.toLowerCase().trim();
+                const cards = document.querySelectorAll('#testiGrid .testi-card');
+                cards.forEach((card) => {
+                    const haystack = card.dataset.search || card.textContent.toLowerCase();
+                    card.style.display = haystack.includes(q) ? '' : 'none';
+                });
+            });
+        }
 
         document.getElementById('view').querySelectorAll('[data-act="edit"]').forEach((btn) => {
             btn.addEventListener('click', () => {

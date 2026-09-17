@@ -28,7 +28,7 @@
     const TEMPLATES = [
         {
             id: 'ack', label: 'Acknowledge',
-            body: 'Dear {{name}},\n\nThank you for writing to Teresa Memorial Hospital. We have received your message and someone from the {{department}} desk will come back to you within one working day.\n\nWarm regards,\n{{me}}\nTeresa Memorial Hospital',
+            body: 'Dear {{name}},\n\nThank you for contacting BCE Export. We have received your message and our team will get back to you within one working day.\n\nWarm regards,\n{{me}}\nBCE Export',
         },
         {
             id: 'appointment', label: 'Offer an appointment',

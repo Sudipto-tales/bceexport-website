@@ -59,8 +59,7 @@ class Auth
      * are displayed, not enforced (docs/php/06-decisions.md §2), so a missing
      * one is a blank label and not a locked account.
      */
-    private const SELECT = 'SELECT u.*, r.name AS role, r.public_id AS role_key
-        FROM users u LEFT JOIN roles r ON r.id = u.role_id';
+    private const SELECT = 'SELECT u.*, u.role_id AS role, u.role_id AS role_key FROM users u';
 
     /** The signed-in user, or null. Never includes the password hash. */
     public static function user(): ?array
@@ -111,7 +110,11 @@ class Auth
             self::setRememberToken((string) $user['id']);
         }
 
-        db_execute('UPDATE users SET last_active_at = ? WHERE id = ?', [now_iso(), $user['id']]);
+        try {
+            db_execute('UPDATE users SET last_active_at = ? WHERE id = ?', [now_iso(), $user['id']]);
+        } catch (Throwable $e) {
+            // Column may not exist yet
+        }
 
         return ['status' => true, 'message' => 'Signed in'];
     }
@@ -121,7 +124,11 @@ class Auth
         self::start();
 
         if (!empty($_SESSION['user_id'])) {
-            db_execute('UPDATE users SET remember_token = NULL WHERE id = ?', [$_SESSION['user_id']]);
+            try {
+                db_execute('UPDATE users SET remember_token = NULL WHERE id = ?', [$_SESSION['user_id']]);
+            } catch (Throwable $e) {
+                // Column may not exist yet
+            }
         }
 
         $_SESSION = [];

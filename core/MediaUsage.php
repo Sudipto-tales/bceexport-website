@@ -36,12 +36,11 @@ final class MediaUsage
      * and a vacancy carries no picture.
      */
     private const SOURCES = [
-        ['entity' => 'doctors', 'table' => 'doctors', 'key' => 'slug', 'label' => 'name', 'columns' => ['photo' => 'photo']],
-        ['entity' => 'leadership', 'table' => 'leadership', 'key' => 'slug', 'label' => 'name', 'columns' => ['photo' => 'photo']],
-        ['entity' => 'departments', 'table' => 'departments', 'key' => 'slug', 'label' => 'name', 'columns' => ['banner' => 'banner', 'intro_img' => 'intro image']],
-        ['entity' => 'posts', 'table' => 'posts', 'key' => 'slug', 'label' => 'title', 'columns' => ['cover_image' => 'cover image']],
+        ['entity' => 'products', 'table' => 'products', 'key' => 'slug', 'label' => 'name', 'columns' => ['image' => 'product image']],
+        ['entity' => 'team-members', 'table' => 'team_members', 'key' => 'slug', 'label' => 'name', 'columns' => ['photo' => 'photo']],
+        ['entity' => 'certificates', 'table' => 'certificates', 'key' => 'slug', 'label' => 'title', 'columns' => ['image' => 'certificate badge']],
+        ['entity' => 'categories', 'table' => 'categories', 'key' => 'slug', 'label' => 'name', 'columns' => ['image' => 'category image']],
         ['entity' => 'testimonials', 'table' => 'testimonials', 'key' => 'public_id', 'label' => 'name', 'columns' => ['photo' => 'photo']],
-        ['entity' => 'facilities', 'table' => 'facilities', 'key' => 'slug', 'label' => 'title', 'columns' => ['image' => 'image']],
     ];
 
     /** Settings that hold a media URL, by group and key. */
@@ -71,24 +70,33 @@ final class MediaUsage
         foreach (self::SOURCES as $source) {
             $columns = array_keys($source['columns']);
 
-            $rows = db_fetch_all(
-                'SELECT ' . $source['key'] . ' AS k, ' . $source['label'] . ' AS label, '
-                . implode(', ', $columns)
-                . ' FROM ' . $source['table'] . ' WHERE deleted_at IS NULL'
-            );
+            try {
+                $rows = db_fetch_all(
+                    'SELECT ' . $source['key'] . ' AS k, ' . $source['label'] . ' AS label, '
+                    . implode(', ', $columns)
+                    . ' FROM ' . $source['table'] . ' WHERE deleted_at IS NULL'
+                );
 
-            foreach ($rows as $row) {
-                foreach ($source['columns'] as $column => $what) {
-                    self::add($map, $row[$column] ?? null, [
-                        'entity' => $source['entity'],
-                        'id' => (string) $row['k'],
-                        'label' => ($row['label'] ?? $row['k']) . ' — ' . $what,
-                    ]);
+                foreach ($rows as $row) {
+                    foreach ($source['columns'] as $column => $what) {
+                        self::add($map, $row[$column] ?? null, [
+                            'entity' => $source['entity'],
+                            'id' => (string) $row['k'],
+                            'label' => ($row['label'] ?? $row['k']) . ' — ' . $what,
+                        ]);
+                    }
                 }
+            } catch (Throwable $e) {
+                // Ignore missing tables or schema differences
             }
         }
 
-        self::addSections($map);
+        try {
+            self::addSections($map);
+        } catch (Throwable $e) {
+            // Ignore if page_sections does not exist
+        }
+
         self::addSettings($map);
 
         return $map;

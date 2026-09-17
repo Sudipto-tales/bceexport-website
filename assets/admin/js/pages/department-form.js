@@ -252,7 +252,7 @@
 
                     <!-- ---- SEO ---- -->
                     <div class="tab-panel" id="tab-seo" role="tabpanel" hidden>
-                        ${F.seo({ titlePlaceholder: 'Cardiology & Heart Care — Teresa Memorial Hospital' })}
+                        ${F.seo({ titlePlaceholder: 'Handicrafts & Export — BCE Export' })}
                     </div>
 
                     ${F.bar()}

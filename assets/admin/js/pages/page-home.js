@@ -190,7 +190,7 @@
             })}
 
             <article class="card mt-6">
-                ${F.seo({ optional: true, titlePlaceholder: 'Teresa Memorial Hospital — Compassionate Care, Every Day' })}
+                ${F.seo({ optional: true, titlePlaceholder: 'BCE Export — Authentic Indian Handicrafts Worldwide' })}
                 ${F.bar({ singleSave: true, saveLabel: 'Save home page' })}
             </article>
         </form>`;

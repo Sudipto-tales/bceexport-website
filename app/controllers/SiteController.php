@@ -102,7 +102,7 @@ abstract class SiteController extends BaseController
         $seo = settings_group('seo');
 
         $head = array_merge([
-            'siteName' => (string) setting('general', 'name', 'Teresa Memorial Hospital'),
+            'siteName' => (string) setting('general', 'site_name', 'BCE Export'),
             'description' => (string) ($seo['defaultDescription'] ?? ''),
             'keywords' => (string) ($seo['defaultKeywords'] ?? ''),
             'ogImage' => (string) ($seo['defaultOgImage'] ?? ''),
@@ -112,7 +112,7 @@ abstract class SiteController extends BaseController
             'noindex' => str_contains(strtolower((string) ($seo['robots'] ?? '')), 'noindex'),
             'verification' => (string) ($seo['googleVerification'] ?? ''),
             'twitterSite' => (string) ($seo['twitterSite'] ?? ''),
-            'favicon' => site_url((string) setting('general', 'favicon', ''), base_url('assets/logo-teresa.png')),
+            'favicon' => site_url((string) setting('general', 'favicon', ''), base_url('img/favicon.ico')),
             'themeColor' => (string) setting('theme', 'primaryColor', '#0d9488'),
             /* 'system' is a browser decision, and the server cannot make it —
                the pre-paint script in the component reads the OS. What the
@@ -175,8 +175,8 @@ abstract class SiteController extends BaseController
         return array_merge([
             'active' => $this->active,
             'departments' => $this->menuDepartments(),
-            'siteName' => (string) setting('general', 'name', 'Teresa Memorial Hospital'),
-            'logo' => site_url((string) setting('general', 'logo', ''), base_url('assets/logo-teresa.png')),
+            'siteName' => (string) setting('general', 'site_name', 'BCE Export'),
+            'logo' => site_url((string) setting('general', 'logo', ''), base_url('img/logo.webp')),
             'email' => site_primary_email(),
             'phone' => $phone['number'],
             'tel' => $phone['digits'],
@@ -218,15 +218,15 @@ abstract class SiteController extends BaseController
         }
 
         $footer = [
-            'siteName' => (string) setting('general', 'name', 'Teresa Memorial Hospital'),
-            'logo' => site_url((string) setting('general', 'logo', ''), base_url('assets/logo-teresa.png')),
+            'siteName' => (string) setting('general', 'site_name', 'BCE Export'),
+            'logo' => site_url((string) setting('general', 'logo', ''), base_url('img/logo.webp')),
             'home' => base_url('/'),
             'address' => site_address_lines(),
             'hours' => $this->openingHours(),
             'social' => $this->social(),
-            'tagline' => (string) setting('general', 'taglineBn', 'মানুষের সাথে ..... মানুষের পাশে'),
+            'tagline' => (string) setting('general', 'tagline', 'Excellence in Global Export & Indian Craftsmanship'),
             'copyright' => '© ' . date('Y') . ' '
-                . setting('general', 'name', 'Teresa Memorial Hospital') . '. All rights reserved.',
+                . setting('general', 'site_name', 'BCE Export') . '. All rights reserved.',
         ];
 
         if ($columns) {

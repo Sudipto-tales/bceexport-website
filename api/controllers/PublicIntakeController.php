@@ -543,17 +543,17 @@ class PublicIntakeController extends ApiController
             return;
         }
 
-        $hospital = (string) setting('general', 'name', 'Teresa Memorial Hospital');
+        $company = (string) setting('general', 'site_name', 'BCE Export');
 
         Mailer::send(
             $email,
             'We have your application — ' . $jobTitle,
             '<p>Dear ' . e($name) . ',</p>'
-            . '<p>Thank you for applying for <strong>' . e($jobTitle) . '</strong> at ' . e($hospital)
-            . '. Your CV has reached the HR desk.</p>'
+            . '<p>Thank you for applying for <strong>' . e($jobTitle) . '</strong> at ' . e($company)
+            . '. Your CV has reached our team.</p>'
             . '<p>Applications are reviewed in the order they arrive, and you will hear from us '
             . 'either way. There is no need to send it again.</p>'
-            . '<p>' . e($hospital) . '</p>',
+            . '<p>' . e($company) . '</p>',
             true
         );
     }

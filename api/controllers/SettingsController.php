@@ -37,13 +37,22 @@ class SettingsController extends ApiController
 
     public function index(): never
     {
+        /* When called by store.all('settings') with pageSize=0, return rows array for the settings screens */
+        if (isset($_GET['pageSize'])) {
+            $rows = db_fetch_all('SELECT setting_group, setting_key, setting_value FROM settings WHERE deleted_at IS NULL');
+            foreach ($rows as &$row) {
+                $decoded = json_decode($row['setting_value'], true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $row['setting_value'] = $decoded;
+                }
+            }
+            unset($row);
+            Api::ok($rows);
+        }
+
         $stored = all_settings(true);
         $out = [];
 
-        /* Every group is present even when it holds nothing, so a settings
-           screen can bind straight to its own group without checking. Cast,
-           because an empty PHP array encodes as [] and the panel expects an
-           object it can read properties off. */
         foreach (self::GROUPS as $group) {
             $out[$group] = (object) ($stored[$group] ?? []);
         }
@@ -98,25 +107,25 @@ class SettingsController extends ApiController
         $before = all_settings(true)[$group] ?? [];
         $userId = $this->userId();
 
-        db_transaction(function () use ($group, $encoded, $userId) {
+        db_transaction(function () use ($group, $encoded) {
             foreach ($encoded as $key => $json) {
                 $id = db_scalar(
-                    'SELECT id FROM settings WHERE group_name = ? AND setting_key = ?',
+                    'SELECT id FROM settings WHERE setting_group = ? AND setting_key = ?',
                     [$group, $key]
                 );
 
                 if ($id) {
                     db_execute(
-                        'UPDATE settings SET value = ?, updated_by = ?, updated_at = ? WHERE id = ?',
-                        [$json, $userId, now_iso(), $id]
+                        'UPDATE settings SET setting_value = ?, updated_at = ? WHERE id = ?',
+                        [$json, now_iso(), $id]
                     );
                     continue;
                 }
 
                 db_execute(
-                    'INSERT INTO settings (group_name, setting_key, value, updated_by, updated_at)
+                    'INSERT INTO settings (setting_group, setting_key, setting_value, created_at, updated_at)
                      VALUES (?, ?, ?, ?, ?)',
-                    [$group, $key, $json, $userId, now_iso()]
+                    [$group, $key, $json, now_iso(), now_iso()]
                 );
             }
         });

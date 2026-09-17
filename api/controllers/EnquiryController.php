@@ -167,17 +167,17 @@ class EnquiryController extends ResourceController
      */
     private function deliver(array $row, string $message, string $recipient, int $id, int $expected): void
     {
-        $hospital = (string) setting('general', 'name', 'Teresa Memorial Hospital');
+        $company = (string) setting('general', 'site_name', 'BCE Export');
         $subject = trim((string) ($row['subject'] ?? ''));
 
         $sent = Mailer::send(
             $recipient,
-            $subject === '' ? 'A reply from ' . $hospital : 'Re: ' . $subject,
+            $subject === '' ? 'A reply from ' . $company : 'Re: ' . $subject,
             /* The desk types plain text into a textarea. Escaped and turned
                into paragraphs — never passed through as markup, whatever it
                contains. */
             '<p>' . implode('</p><p>', array_map('e', preg_split('/\n{2,}/', trim($message)) ?: [])) . '</p>'
-            . '<hr><p style="color:#667">' . e($hospital)
+            . '<hr><p style="color:#667">' . e($company)
             . ($this->replyTo() === '' ? '' : ' — reply to this message and it reaches the desk.') . '</p>',
             true,
             $this->replyTo() === '' ? [] : ['replyTo' => $this->replyTo()]

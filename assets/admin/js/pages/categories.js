@@ -23,12 +23,22 @@
         const categories = await store.all('categories');
 
         document.getElementById('view').innerHTML = `
-            <div class="grid grid--3 gap-4">
+            <div class="card anim-item mb-4">
+                <div class="card__body p-3 row gap-2 items-center">
+                    <div class="toolbar__search grow" style="max-width:320px">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="search" id="categorySearch" placeholder="Search categories...">
+                    </div>
+                    <span class="muted text-sm ml-auto">${categories.length} categor${categories.length === 1 ? 'y' : 'ies'}</span>
+                </div>
+            </div>
+
+            <div class="grid grid--3 gap-4" id="categoryGrid">
                 ${categories.map((c) => `
-                    <article class="card anim-item">
+                    <article class="card anim-item category-card" data-search="${U.esc((c.name + ' ' + (c.slug || '') + ' ' + (c.description || '')).toLowerCase())}">
                         <div class="card__body col gap-3">
                             <div class="row gap-3 items-center">
-                                ${c.image ? `<img src="${U.esc(c.image)}" alt="" style="width:50px;height:50px;object-fit:cover;border-radius:var(--radius-sm)">` : `<span class="avatar" style="width:50px;height:50px;font-size:20px;display:grid;place-items:center"><i class="fa-solid fa-tags"></i></span>`}
+                                ${c.image ? `<img src="${U.esc(U.mediaUrl(c.image))}" alt="" style="width:50px;height:50px;object-fit:cover;border-radius:var(--radius-sm)">` : `<span class="avatar" style="width:50px;height:50px;font-size:20px;display:grid;place-items:center"><i class="fa-solid fa-tags"></i></span>`}
                                 <div class="grow">
                                     <h4 class="m-0">${U.esc(c.name)}</h4>
                                     <small class="muted">${U.esc(c.slug)}</small>
@@ -45,6 +55,18 @@
             </div>`;
 
         U.stagger(document.getElementById('view'));
+
+        const searchInput = document.getElementById('categorySearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const q = e.target.value.toLowerCase().trim();
+                const cards = document.querySelectorAll('#categoryGrid .category-card');
+                cards.forEach((card) => {
+                    const haystack = card.dataset.search || card.textContent.toLowerCase();
+                    card.style.display = haystack.includes(q) ? '' : 'none';
+                });
+            });
+        }
 
         document.getElementById('view').querySelectorAll('[data-act="edit"]').forEach((btn) => {
             btn.addEventListener('click', () => {

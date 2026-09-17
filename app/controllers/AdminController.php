@@ -229,15 +229,15 @@ class AdminController extends SiteController
      */
     private function shell(string $body, array $data): void
     {
-        $head = array_merge($this->head(), $data['head'] ?? []);
-        $head['noindex'] = true;
-
-        App::render('site/layout/head', $head);
+        App::render('admin/head', [
+            'title' => $data['head']['title'] ?? 'Sign in',
+            'page' => 'login'
+        ]);
 
         echo "\n    <main id=\"top\" class=\"adm-shell\">\n";
         render_view('/app/page/' . $body . '.php', $data + [
-            'siteName' => (string) setting('general', 'name', 'Teresa Memorial Hospital'),
-            'logo' => site_url((string) setting('general', 'logo', ''), base_url('assets/logo-teresa.png')),
+            'siteName' => (string) setting('general', 'site_name', 'BCE Export'),
+            'logo' => site_url((string) setting('general', 'logo', ''), base_url('img/logo.webp')),
             'home' => base_url('/'),
         ]);
         echo "\n    </main>\n</body>\n\n</html>\n";

@@ -1,5 +1,5 @@
 /* =========================================================
-   Teresa Memorial Hospital — Admin Panel
+   BCE Export — Admin Panel
    Design tokens. Every other stylesheet reads from here and
    defines no raw colour of its own.
 
@@ -9,20 +9,21 @@
    ========================================================= */
 
 :root {
-    /* ---- brand ---- */
-    --brand-red: #C1272D;
-    --brand-red-soft: #E2565C;
-    --brand-magenta: #A81E5C;
-    --brand-magenta-deep: #7A1540;
-    --brand-navy: #1B3E7A;
-    --brand-blue: #2E6BB8;
-    --accent-orange: #F57C00;
+    /* ---- brand (BCE Export palette) ---- */
+    --brand-red: #FF3E41;
+    --brand-red-soft: #FF686A;
+    --brand-magenta: #51CFED;
+    --brand-magenta-deep: #20ADC3;
+    --brand-navy: #1B2A4A;
+    --brand-blue: #FF3E41;
+    --brand-secondary: #51CFED;
+    --accent-orange: #FF7043;
 
     /* ---- semantic ---- */
     --good: #2E7D32;
     --bad: #C62828;
     --warn: #F57C00;
-    --info: #2E6BB8;
+    --info: #51CFED;
 
     /* Tinted backgrounds for badges, banners and toast discs. Kept as
        explicit hex rather than colour-mix so the dark theme can retune
@@ -30,16 +31,16 @@
     --good-bg: #E8F3E9;
     --bad-bg: #FBEAEA;
     --warn-bg: #FDF0E0;
-    --info-bg: #E7EFF9;
+    --info-bg: #E8F9FD;
 
     /* ---- surfaces ---- */
-    --bg: #F7F1F3;
+    --bg: #F8F2F0;
     --surface: #FFFFFF;
-    --surface-2: #FBF6F8;
-    --surface-3: #F4EBEF;
+    --surface-2: #FDF9F8;
+    --surface-3: #F4EAE7;
     --sidebar-bg: #FFFFFF;
-    --hairline: #F0E3E8;
-    --hairline-strong: #E3D0D8;
+    --hairline: #EFE2DE;
+    --hairline-strong: #E0CFC9;
 
     /* ---- text ---- */
     --text-dark: #2C2028;
@@ -137,18 +138,19 @@
    AA target moves when the background does.
    ========================================================= */
 [data-theme='dark'] {
-    --brand-red: #E2565C;
-    --brand-red-soft: #F07C81;
-    --brand-magenta: #D2568C;
-    --brand-magenta-deep: #A83E6C;
+    --brand-red: #FF686A;
+    --brand-red-soft: #FF8587;
+    --brand-magenta: #51CFED;
+    --brand-magenta-deep: #20ADC3;
     --brand-navy: #6D93D6;
-    --brand-blue: #64B5F6;
+    --brand-blue: #FF686A;
+    --brand-secondary: #51CFED;
     --accent-orange: #FFA726;
 
     --good: #6ABF6E;
     --bad: #EF5350;
     --warn: #FFA726;
-    --info: #64B5F6;
+    --info: #51CFED;
 
     --good-bg: #1E2E20;
     --bad-bg: #33201F;

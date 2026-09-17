@@ -89,6 +89,38 @@ if (!function_exists('settings_group')) {
     }
 }
 
+if (!function_exists('all_settings')) {
+    /**
+     * All settings as group => [key => value].
+     */
+    function all_settings(bool $fresh = false): array
+    {
+        static $cache = null;
+
+        if ($cache !== null && !$fresh) {
+            return $cache;
+        }
+
+        try {
+            $rows = db_fetch_all('SELECT setting_group, setting_key, setting_value FROM settings WHERE deleted_at IS NULL');
+        } catch (Throwable $e) {
+            return [];
+        }
+
+        $out = [];
+        foreach ($rows as $row) {
+            $g = $row['setting_group'];
+            $k = $row['setting_key'];
+            $val = $row['setting_value'];
+            $decoded = json_decode($val, true);
+            $out[$g][$k] = (json_last_error() === JSON_ERROR_NONE) ? $decoded : $val;
+        }
+
+        $cache = $out;
+        return $out;
+    }
+}
+
 /* ---------------------------------------------------------
    Site contact helpers
    --------------------------------------------------------- */

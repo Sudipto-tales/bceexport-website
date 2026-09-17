@@ -4,6 +4,134 @@
  * BCE Export Admin Sign-in Screen.
  */
 ?>
+<style>
+.adm-shell {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg, #f7f1f3);
+    padding: 24px;
+}
+.adm-auth {
+    width: 100%;
+    max-width: 420px;
+}
+.adm-auth__card {
+    background: var(--surface, #ffffff);
+    border: 1px solid var(--hairline-strong, #e3d0d8);
+    border-radius: 12px;
+    padding: 36px 32px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.adm-auth__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-dark, #2c2028);
+    margin-bottom: 8px;
+    text-decoration: none;
+}
+.adm-auth__brand img {
+    border-radius: 8px;
+}
+.adm-auth__card h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-dark, #2c2028);
+}
+.adm-auth__lead {
+    color: var(--text-mid, #6b5a62);
+    font-size: 0.875rem;
+    line-height: 1.4;
+    margin: 0 0 8px 0;
+}
+.adm-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.adm-field span {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-dark, #2c2028);
+}
+.adm-field input {
+    padding: 10px 14px;
+    border: 1px solid var(--hairline-strong, #e3d0d8);
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-family: inherit;
+    background: var(--surface, #fff);
+    color: var(--text-dark, #2c2028);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.adm-field input:focus {
+    border-color: var(--brand-blue, #2e6bb8);
+    box-shadow: 0 0 0 3px rgba(46, 107, 184, 0.15);
+}
+.adm-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: var(--text-mid, #6b5a62);
+    cursor: pointer;
+    user-select: none;
+}
+.adm-auth__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--brand-blue, #2e6bb8);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 8px;
+}
+.adm-auth__submit:hover {
+    background: #23589b;
+}
+.adm-auth__submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.adm-auth__note {
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--bad-bg, #fbeaea);
+    color: var(--bad, #c62828);
+    font-size: 0.8125rem;
+    margin: 0;
+}
+.adm-auth__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted, #9c8b93);
+    font-size: 0.8125rem;
+    text-decoration: none;
+    margin-top: 8px;
+    align-self: center;
+}
+.adm-auth__back:hover {
+    color: var(--brand-blue, #2e6bb8);
+}
+</style>
+
         <section class="adm-auth">
             <form class="adm-auth__card" id="adminLogin" method="post" action="<?= e($action ?? '') ?>" novalidate>
                 <a class="adm-auth__brand" href="<?= e($home ?? '/') ?>">
@@ -20,12 +148,12 @@
 
                 <label class="adm-field" for="admEmail">
                     <span>Email</span>
-                    <input type="email" id="admEmail" name="email" value="admin@bceexport.com" autocomplete="username" required autofocus>
+                    <input type="email" id="admEmail" name="email" placeholder="admin@bceexport.com" autocomplete="username" required autofocus>
                 </label>
 
                 <label class="adm-field" for="admPassword">
                     <span>Password</span>
-                    <input type="password" id="admPassword" name="password" value="admin123" autocomplete="current-password" required>
+                    <input type="password" id="admPassword" name="password" placeholder="••••••••" autocomplete="current-password" required>
                 </label>
 
                 <label class="adm-check">

@@ -58,7 +58,7 @@
                                 ${products.length ? products.map((p) => `
                                     <tr data-id="${U.esc(p.id)}">
                                         <td>
-                                            ${p.image ? `<img src="${U.esc(p.image)}" alt="" style="width:40px;height:40px;object-fit:cover;border-radius:4px">` : '<span class="muted"><i class="fa-solid fa-image"></i></span>'}
+                                            ${p.image ? `<img src="${U.esc(U.mediaUrl(p.image))}" alt="" style="width:40px;height:40px;object-fit:cover;border-radius:4px">` : '<span class="muted"><i class="fa-solid fa-image"></i></span>'}
                                         </td>
                                         <td>
                                             <b>${U.esc(p.name)}</b><br>
@@ -80,6 +80,18 @@
             </article>`;
 
         U.stagger(document.getElementById('view'));
+
+        const searchInput = document.getElementById('productSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const q = e.target.value.toLowerCase().trim();
+                const rows = document.querySelectorAll('#productTable tbody tr');
+                rows.forEach((row) => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(q) ? '' : 'none';
+                });
+            });
+        }
 
         document.getElementById('view').querySelectorAll('[data-act="delete"]').forEach((btn) => {
             btn.addEventListener('click', async () => {

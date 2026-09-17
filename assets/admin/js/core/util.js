@@ -18,6 +18,16 @@
                 }[c]));
         },
 
+        /* Normalize image URL so local paths always resolve from domain root */
+        mediaUrl(url) {
+            if (!url) return '';
+            const s = String(url).trim();
+            if (s.startsWith('http://') || s.startsWith('https://') || s.startsWith('data:') || s.startsWith('blob:')) {
+                return s;
+            }
+            return '/' + s.replace(/^\/+/, '');
+        },
+
         /* Strip tags — for rendering a rich-text excerpt in a table cell. */
         plain(html) {
             const d = document.createElement('div');

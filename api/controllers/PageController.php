@@ -30,20 +30,24 @@ class PageController extends ApiController
 
     public function index(): never
     {
-        $raws = db_fetch_all(
-            'SELECT * FROM pages WHERE deleted_at IS NULL ORDER BY title, id'
-        );
+        try {
+            $raws = db_fetch_all(
+                'SELECT * FROM pages WHERE deleted_at IS NULL ORDER BY title, id'
+            );
 
-        $ids = array_map(static fn ($raw) => (int) $raw['id'], $raws);
-        $sections = $this->sectionsFor($ids);
-        $seo = SeoMeta::read(self::SEO_TYPE, $ids);
-        $rows = [];
+            $ids = array_map(static fn ($raw) => (int) $raw['id'], $raws);
+            $sections = $this->sectionsFor($ids);
+            $seo = SeoMeta::read(self::SEO_TYPE, $ids);
+            $rows = [];
 
-        foreach ($raws as $raw) {
-            $rows[] = $this->row($raw, $sections, $seo);
+            foreach ($raws as $raw) {
+                $rows[] = $this->row($raw, $sections, $seo);
+            }
+
+            Api::ok($rows, ['page' => 1, 'pageSize' => 0, 'total' => count($rows)]);
+        } catch (Throwable $e) {
+            Api::ok([], ['page' => 1, 'pageSize' => 0, 'total' => 0]);
         }
-
-        Api::ok($rows, ['page' => 1, 'pageSize' => 0, 'total' => count($rows)]);
     }
 
     public function show(): never
