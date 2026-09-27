@@ -11,10 +11,11 @@ final class ApiRequest
         }
 
         $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+        $rawInput = file_get_contents('php://input');
 
         self::$parsedBody = match (true) {
             str_contains($contentType, 'application/json')
-                => json_decode(file_get_contents('php://input'), true) ?? [],
+                => json_decode($rawInput, true) ?? [],
             str_contains($contentType, 'application/x-www-form-urlencoded'),
             str_contains($contentType, 'multipart/form-data')
                 => $_POST,
