@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://www.bceexport.com/</loc><priority>1.0</priority></url>
-  <url><loc>https://www.bceexport.com/about.html</loc><priority>0.8</priority></url>
-  <url><loc>https://www.bceexport.com/service.html</loc><priority>0.7</priority></url>
-  <url><loc>https://www.bceexport.com/contact.html</loc><priority>0.9</priority></url>
-  <url><loc>https://www.bceexport.com/leather.html</loc><priority>0.9</priority></url>
-  <url><loc>https://www.bceexport.com/wooden_handicraft.html</loc><priority>0.9</priority></url>
-  <url><loc>https://www.bceexport.com/Furniture.html</loc><priority>0.9</priority></url>
-  <url><loc>https://www.bceexport.com/jute.html</loc><priority>0.9</priority></url>
-  <url><loc>https://www.bceexport.com/Dhokra.html</loc><priority>0.9</priority></url>
-  <url><loc>https://www.bceexport.com/Terracotta.html</loc><priority>0.9</priority></url>
-  <url><loc>https://www.bceexport.com/fruit-vegetable.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.bceexport.com/about</loc><priority>0.8</priority></url>
+  <url><loc>https://www.bceexport.com/services</loc><priority>0.8</priority></url>
+  <url><loc>https://www.bceexport.com/contact</loc><priority>0.9</priority></url>
+  <url><loc>https://www.bceexport.com/quote</loc><priority>0.8</priority></url>
+  <url><loc>https://www.bceexport.com/team</loc><priority>0.7</priority></url>
+  <url><loc>https://www.bceexport.com/testimonials</loc><priority>0.7</priority></url>
+  <url><loc>https://www.bceexport.com/blog</loc><priority>0.8</priority></url>
+  <url><loc>https://www.bceexport.com/products/leather</loc><priority>0.9</priority></url>
+  <url><loc>https://www.bceexport.com/products/wooden-handicraft</loc><priority>0.9</priority></url>
+  <url><loc>https://www.bceexport.com/products/furniture</loc><priority>0.9</priority></url>
+  <url><loc>https://www.bceexport.com/products/jute</loc><priority>0.9</priority></url>
+  <url><loc>https://www.bceexport.com/products/dhokra</loc><priority>0.9</priority></url>
+  <url><loc>https://www.bceexport.com/products/terracotta</loc><priority>0.9</priority></url>
+  <url><loc>https://www.bceexport.com/products/fruit-vegetable</loc><priority>0.9</priority></url>
+  <url><loc>https://www.bceexport.com/blog/sourcing-genuine-leather-goods-from-india</loc><priority>0.8</priority></url>
+  <url><loc>https://www.bceexport.com/blog/top-trends-in-eco-friendly-jute-and-terracotta-exports</loc><priority>0.8</priority></url>
+  <url><loc>https://www.bceexport.com/blog/complete-guide-to-customs-and-freight-for-handicraft-exporters</loc><priority>0.8</priority></url>
+  <url><loc>https://www.bceexport.com/blog/how-to-import-indian-dhokra-handicrafts</loc><priority>0.8</priority></url>
 </urlset>

@@ -163,7 +163,8 @@ class PublicController extends BaseController
             return;
         }
 
-        $products = get_products_by_category($category);
+        $page = max(1, (int) ($_GET['page'] ?? 1));
+        $pagedData = get_products_by_category_paged($category, $page, 12);
 
         $classMap = [
             'leather'           => 'leather',
@@ -198,8 +199,119 @@ class PublicController extends BaseController
             'ogType' => 'product',
             'ogImage' => $catImage,
             'category' => $category,
-            'products' => $products,
+            'products' => $pagedData['products'],
+            'total' => $pagedData['total'],
+            'currentPage' => $pagedData['page'],
+            'totalPages' => $pagedData['totalPages'],
         ], 'products');
+    }
+
+    /** GET /blog */
+    public function blogList(): void
+    {
+        $page = max(1, (int) ($_GET['page'] ?? 1));
+        $cat = trim((string) ($_GET['category'] ?? ''));
+        $q = trim((string) ($_GET['q'] ?? ''));
+
+        $data = get_blog_posts($page, 9, $cat, $q);
+        $categories = get_blog_categories();
+
+        $this->page('blog', [
+            'title' => 'Blog & Sourcing Insights — BCE Export',
+            'description' => 'Latest articles, sourcing guides, material insights, and export logistics news from BCE Export.',
+            'pageTitle' => 'Blog & Insights',
+            'headerClass' => 'about',
+            'breadcrumbs' => ['Blog' => ''],
+            'ogImage' => base_url('img/about01.webp'),
+            'posts' => $data['posts'],
+            'total' => $data['total'],
+            'currentPage' => $data['page'],
+            'totalPages' => $data['totalPages'],
+            'blogCategories' => $categories,
+            'currentCategory' => $cat,
+            'searchQuery' => $q,
+        ], 'blog');
+    }
+
+    /** GET /blog/{slug} */
+    public function blogDetail(): void
+    {
+        $slug = (string) $this->param('slug', '');
+        $post = get_blog_post_by_slug($slug);
+
+        if (!$post) {
+            $this->notFoundPage();
+            return;
+        }
+
+        $related = get_related_blog_posts($post, 4);
+
+        $coverImage = !empty($post['cover_image'])
+            ? site_url($post['cover_image'])
+            : base_url('img/about01.webp');
+
+        $this->page('blog-post', [
+            'title' => $post['title'] . ' — BCE Export Blog',
+            'description' => !empty($post['excerpt']) ? strip_tags($post['excerpt']) : substr(strip_tags($post['body'] ?? ''), 0, 160),
+            'pageTitle' => $post['title'],
+            'headerClass' => 'about',
+            'breadcrumbs' => [
+                'Blog' => base_url('blog'),
+                $post['title'] => '',
+            ],
+            'ogType' => 'article',
+            'ogImage' => $coverImage,
+            'post' => $post,
+            'relatedPosts' => $related,
+        ], 'blog');
+    }
+
+    /** GET /sitemap.xml */
+    public function sitemap(): void
+    {
+        header('Content-Type: application/xml; charset=utf-8');
+
+        $baseUrl = rtrim(base_url('/'), '/');
+
+        $staticPages = [
+            '/' => '1.0',
+            '/about' => '0.8',
+            '/services' => '0.8',
+            '/contact' => '0.9',
+            '/quote' => '0.8',
+            '/team' => '0.7',
+            '/testimonials' => '0.7',
+            '/blog' => '0.8',
+        ];
+
+        $categories = get_categories();
+        $blogPosts = get_blog_posts(1, 200)['posts'] ?? [];
+
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+
+        foreach ($staticPages as $path => $priority) {
+            $xml .= '  <url><loc>' . htmlspecialchars($baseUrl . $path, ENT_XML1, 'UTF-8') . '</loc><priority>' . $priority . '</priority></url>' . "\n";
+        }
+
+        foreach ($categories as $cat) {
+            $slug = $cat['slug'] ?? '';
+            if ($slug !== '') {
+                $xml .= '  <url><loc>' . htmlspecialchars($baseUrl . '/products/' . $slug, ENT_XML1, 'UTF-8') . '</loc><priority>0.9</priority></url>' . "\n";
+            }
+        }
+
+        foreach ($blogPosts as $post) {
+            $slug = $post['slug'] ?? '';
+            if ($slug !== '') {
+                $xml .= '  <url><loc>' . htmlspecialchars($baseUrl . '/blog/' . $slug, ENT_XML1, 'UTF-8') . '</loc><priority>0.8</priority></url>' . "\n";
+            }
+        }
+
+        $xml .= '</urlset>';
+
+        echo $xml;
+        exit;
     }
 
     /** 404 error page */

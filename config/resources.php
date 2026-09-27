@@ -152,4 +152,44 @@ return [
         'unique' => ['email'],
         'statusValues' => ['active', 'suspended'],
     ],
+
+    'blog-categories' => [
+        'table' => 'blog_categories',
+        'key' => 'slug',
+        'label' => 'name',
+        'search' => ['name', 'description'],
+        'sort' => ['name', 'order', 'status', 'updatedAt'],
+        'fields' => [
+            'name' => 'string',
+            'description' => 'text',
+        ],
+        'required' => ['name'],
+        'dependents' => [
+            ['table' => 'blog_posts', 'column' => 'category_id', 'label' => 'blog post', 'resource' => 'blog-posts'],
+        ],
+    ],
+
+    'blog-posts' => [
+        'table' => 'blog_posts',
+        'key' => 'slug',
+        'label' => 'title',
+        'search' => ['title', 'excerpt', 'body', 'author_name'],
+        'sort' => ['title', 'publishedAt', 'order', 'status', 'updatedAt'],
+        'fields' => [
+            'title' => 'string',
+            'excerpt' => 'text',
+            'body' => 'text',
+            'coverImage' => 'string',
+            'categoryId' => ['type' => 'ref', 'column' => 'category_id', 'target' => 'blog-categories'],
+            'authorName' => 'string',
+            'tags' => 'json',
+            'featured' => 'bool',
+            'publishedAt' => 'datetime',
+        ],
+        'filters' => [
+            'categoryId' => ['type' => 'ref', 'column' => 'category_id', 'target' => 'blog-categories'],
+            'featured' => ['type' => 'bool'],
+        ],
+        'required' => ['title'],
+    ],
 ];

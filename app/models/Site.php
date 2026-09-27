@@ -271,6 +271,191 @@ if (!function_exists('get_products_by_category')) {
     }
 }
 
+if (!function_exists('get_products_by_category_paged')) {
+    function get_products_by_category_paged($category, int $page = 1, int $perPage = 12): array
+    {
+        try {
+            $catId = is_array($category) ? ($category['id'] ?? '') : (string) $category;
+            $catSlug = is_array($category) ? ($category['slug'] ?? '') : (string) $category;
+
+            $sqlCount = 'SELECT COUNT(*) FROM products WHERE (category_id = ? OR category_id = ?) AND status = ? AND deleted_at IS NULL';
+            $total = (int) db_scalar($sqlCount, [(string) $catId, (string) $catSlug, 'published']);
+
+            $perPage = max(1, min(24, $perPage));
+            $page = max(1, $page);
+            $totalPages = max(1, (int) ceil($total / $perPage));
+            $offset = ($page - 1) * $perPage;
+
+            $sqlRows = 'SELECT * FROM products WHERE (category_id = ? OR category_id = ?) AND status = ? AND deleted_at IS NULL ORDER BY sort_order ASC, id ASC LIMIT ' . $perPage . ' OFFSET ' . $offset;
+            $products = db_fetch_all($sqlRows, [(string) $catId, (string) $catSlug, 'published']);
+
+            return [
+                'products' => $products,
+                'total' => $total,
+                'page' => $page,
+                'perPage' => $perPage,
+                'totalPages' => $totalPages,
+            ];
+        } catch (Throwable $e) {
+            return [
+                'products' => [],
+                'total' => 0,
+                'page' => 1,
+                'perPage' => $perPage,
+                'totalPages' => 1,
+            ];
+        }
+    }
+}
+
+/* ---------------------------------------------------------
+   Blog helpers
+   --------------------------------------------------------- */
+
+if (!function_exists('get_blog_categories')) {
+    function get_blog_categories(): array
+    {
+        try {
+            return db_fetch_all(
+                'SELECT * FROM blog_categories WHERE status = ? AND deleted_at IS NULL ORDER BY sort_order ASC',
+                ['published']
+            );
+        } catch (Throwable $e) {
+            return [];
+        }
+    }
+}
+
+if (!function_exists('get_blog_posts')) {
+    function get_blog_posts(int $page = 1, int $perPage = 9, ?string $categorySlug = null, ?string $query = null): array
+    {
+        try {
+            $where = ['status = ?', 'deleted_at IS NULL'];
+            $params = ['published'];
+
+            if ($categorySlug !== null && $categorySlug !== '' && $categorySlug !== 'all') {
+                $where[] = '(category_id = ? OR category_id = (SELECT slug FROM blog_categories WHERE slug = ?))';
+                $params[] = $categorySlug;
+                $params[] = $categorySlug;
+            }
+
+            if ($query !== null && trim($query) !== '') {
+                $where[] = '(title LIKE ? OR excerpt LIKE ? OR body LIKE ?)';
+                $q = '%' . trim($query) . '%';
+                $params[] = $q;
+                $params[] = $q;
+                $params[] = $q;
+            }
+
+            $sqlWhere = implode(' AND ', $where);
+            $total = (int) db_scalar("SELECT COUNT(*) FROM blog_posts WHERE {$sqlWhere}", $params);
+
+            $perPage = max(1, min(24, $perPage));
+            $page = max(1, $page);
+            $totalPages = max(1, (int) ceil($total / $perPage));
+            $offset = ($page - 1) * $perPage;
+
+            $rows = db_fetch_all(
+                "SELECT * FROM blog_posts WHERE {$sqlWhere} ORDER BY published_at DESC, id DESC LIMIT {$perPage} OFFSET {$offset}",
+                $params
+            );
+
+            $cats = get_blog_categories();
+            $catMap = [];
+            foreach ($cats as $c) {
+                $catMap[$c['slug']] = $c['name'];
+            }
+
+            foreach ($rows as &$r) {
+                $r['category_name'] = $catMap[$r['category_id'] ?? ''] ?? 'General';
+            }
+            unset($r);
+
+            return [
+                'posts' => $rows,
+                'total' => $total,
+                'page' => $page,
+                'perPage' => $perPage,
+                'totalPages' => $totalPages,
+            ];
+        } catch (Throwable $e) {
+            return [
+                'posts' => [],
+                'total' => 0,
+                'page' => 1,
+                'perPage' => $perPage,
+                'totalPages' => 1,
+            ];
+        }
+    }
+}
+
+if (!function_exists('get_blog_post_by_slug')) {
+    function get_blog_post_by_slug(string $slug): ?array
+    {
+        try {
+            $post = db_fetch_one(
+                'SELECT * FROM blog_posts WHERE slug = ? AND status = ? AND deleted_at IS NULL',
+                [$slug, 'published']
+            );
+
+            if (!$post) {
+                return null;
+            }
+
+            $cat = db_fetch_one('SELECT name FROM blog_categories WHERE slug = ? OR id = ?', [$post['category_id'] ?? '', $post['category_id'] ?? '']);
+            $post['category_name'] = $cat ? $cat['name'] : 'General';
+
+            return $post;
+        } catch (Throwable $e) {
+            return null;
+        }
+    }
+}
+
+if (!function_exists('get_related_blog_posts')) {
+    function get_related_blog_posts(array $currentPost, int $limit = 4): array
+    {
+        try {
+            $catId = $currentPost['category_id'] ?? '';
+            $currentId = $currentPost['id'] ?? 0;
+            $currentSlug = $currentPost['slug'] ?? '';
+
+            $rows = db_fetch_all(
+                'SELECT * FROM blog_posts WHERE status = ? AND deleted_at IS NULL AND category_id = ? AND id != ? AND slug != ? ORDER BY published_at DESC LIMIT ' . $limit,
+                ['published', $catId, $currentId, $currentSlug]
+            );
+
+            // Fallback if not enough posts in same category: fetch latest published posts
+            if (count($rows) < $limit) {
+                $needed = $limit - count($rows);
+                $excludeIds = array_merge([$currentId], array_column($rows, 'id'));
+                $placeholders = implode(',', array_fill(0, count($excludeIds), '?'));
+                $more = db_fetch_all(
+                    "SELECT * FROM blog_posts WHERE status = ? AND deleted_at IS NULL AND id NOT IN ({$placeholders}) ORDER BY published_at DESC LIMIT " . $needed,
+                    array_merge(['published'], $excludeIds)
+                );
+                $rows = array_merge($rows, $more);
+            }
+
+            $cats = get_blog_categories();
+            $catMap = [];
+            foreach ($cats as $c) {
+                $catMap[$c['slug']] = $c['name'];
+            }
+
+            foreach ($rows as &$r) {
+                $r['category_name'] = $catMap[$r['category_id'] ?? ''] ?? 'General';
+            }
+            unset($r);
+
+            return $rows;
+        } catch (Throwable $e) {
+            return [];
+        }
+    }
+}
+
 if (!function_exists('get_team_members')) {
     function get_team_members(): array
     {
@@ -312,3 +497,4 @@ if (!function_exists('get_certificates')) {
         }
     }
 }
+

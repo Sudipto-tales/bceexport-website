@@ -738,7 +738,7 @@ class ResourceController extends ApiController
             /* Stored as an array; the form edits it as "a, b, c". */
             'csv' => implode(', ', json_column($value)),
             'datetime' => $this->iso($value),
-            'ref' => $this->refKey($field['target'], (int) $value),
+            'ref' => $this->refKey($field['target'], $value),
             default => $value,
         };
     }

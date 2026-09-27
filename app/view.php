@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../core/RouteProvider.php';
 
+if (!class_exists('ViewRouteProvider')) {
 class ViewRouteProvider extends RouteProvider
 {
     public static function routes(): array
@@ -18,6 +19,9 @@ class ViewRouteProvider extends RouteProvider
             'team'                => ['PublicController', 'team'],
             'testimonials'        => ['PublicController', 'testimonials'],
             'products/{slug}'     => ['PublicController', 'category'],
+            'blog'                => ['PublicController', 'blogList'],
+            'blog/{slug}'         => ['PublicController', 'blogDetail'],
+            'sitemap.xml'         => ['PublicController', 'sitemap'],
             '404'                 => ['PublicController', 'notFoundPage'],
 
             /* -------------------------------------------------------
@@ -29,6 +33,7 @@ class ViewRouteProvider extends RouteProvider
             'admin/{screen}'      => ['AdminController', 'screen'],
         ];
     }
+}
 }
 
 return ViewRouteProvider::routes();

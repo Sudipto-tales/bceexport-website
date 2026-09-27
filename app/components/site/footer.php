@@ -38,6 +38,7 @@ $address = $address ?? 'Arabindanagar (N) Bankura 722101 West Bengal, INDIA';
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-light mb-4">Quick Links</h4>
                     <a class="btn btn-link" href="<?= base_url('about') ?>">About Us</a>
+                    <a class="btn btn-link" href="<?= base_url('blog') ?>">Blog &amp; Insights</a>
                     <a class="btn btn-link" href="<?= base_url('contact') ?>">Contact Us</a>
                     <a class="btn btn-link" href="<?= base_url('products/leather') ?>">Leather</a>
                     <a class="btn btn-link" href="<?= base_url('products/wooden-handicraft') ?>">Wooden Handicraft</a>

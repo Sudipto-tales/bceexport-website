@@ -21,6 +21,7 @@ class Seeder
         $count += $this->seedTeam();
         $count += $this->seedTestimonials();
         $count += $this->seedProducts();
+        $count += $this->seedBlog();
         return $count;
     }
 
@@ -248,5 +249,107 @@ class Seeder
         }
         ($this->out)("  + Seeded/Upserted " . count($products) . " Export Products across 7 Categories ({$inserted} new)");
         return count($products);
+    }
+
+    private function seedBlog(): int
+    {
+        $now = date('Y-m-d H:i:s');
+        
+        $categories = [
+            ['slug' => 'export-insights', 'name' => 'Export & Sourcing Insights', 'description' => 'Trends, market analysis, and sourcing strategies for international buyers.'],
+            ['slug' => 'handicraft-guides', 'name' => 'Handicraft & Material Guides', 'description' => 'Craftsmanship insights on Indian metalwork, leather, jute, terracotta, and wood.'],
+            ['slug' => 'quality-logistics', 'name' => 'Quality & Global Shipping', 'description' => 'Logistics, packaging, customs compliance, and quality control best practices.'],
+        ];
+
+        $catCheck = $this->pdo->prepare("SELECT id FROM blog_categories WHERE slug = ?");
+        $catInsert = $this->pdo->prepare("INSERT INTO blog_categories (slug, name, description, status, sort_order, created_at, updated_at) VALUES (?, ?, ?, 'published', ?, ?, ?)");
+        $catOrder = 1;
+        foreach ($categories as $cat) {
+            $catCheck->execute([$cat['slug']]);
+            if (!$catCheck->fetch()) {
+                $catInsert->execute([$cat['slug'], $cat['name'], $cat['description'], $catOrder++, $now, $now]);
+            }
+        }
+
+        $posts = [
+            [
+                'slug' => 'how-to-import-indian-dhokra-handicrafts',
+                'title' => 'How to Import Indian Dhokra Handicrafts: A Step-by-Step Sourcing Guide',
+                'category_id' => 'handicraft-guides',
+                'excerpt' => 'Discover the heritage of Bankura Dhokra lost-wax metal art, quality inspection techniques, packaging requirements, and export logistics for international buyers.',
+                'body' => '<p>Dhokra (also spelled Dokra) art is one of India\'s oldest non-ferrous metal casting techniques, dating back over 4,000 years to the Indus Valley Civilization. Crafted primarily in the Bankura district of West Bengal, these handcrafted brass and bronze artifacts are highly prized by art collectors, interior designers, and global giftware importers.</p><h3>Why Source Dhokra Metal Crafts?</h3><p>Unlike mass-produced cast items, every single Dhokra piece is handcrafted using a traditional lost-wax technique (cire perdue). Because the clay mold must be broken to retrieve the cast artifact, every piece produced is completely unique.</p><h3>Key Quality Control Considerations for Exporters</h3><ul><li><b>Metal Composition:</b> High quality brass/bronze alloys ensure durability and signature golden patina without brittle spots.</li><li><b>Detailing & Finish:</b> Fine wax wire detailing on figurines, horses, elephants, and idols indicates master artisan craft.</li><li><b>Protective Packaging:</b> Individual bubble wraps and rigid outer master cartons prevent surface abrasion during long ocean freight container transits.</li></ul><p>At BCE Export, we work directly with Bankura artisan clusters to ensure strict quality standards, fair trade practices, and complete documentation for international customs clearance.</p>',
+                'cover_image' => '/img/Dhokra Handcrafted.webp',
+                'author_name' => 'BCE Export Team',
+                'tags' => json_encode(['dhokra', 'handicrafts', 'import-guide', 'metal-art']),
+                'featured' => 1,
+                'published_at' => '2026-09-20 10:00:00',
+            ],
+            [
+                'slug' => 'jute-vs-plastic-packaging-for-export',
+                'title' => 'Jute vs Plastic Packaging for Export: Sustainable Sourcing for Global Brands',
+                'category_id' => 'export-insights',
+                'excerpt' => 'Why international importers are shifting to eco-friendly Indian jute bags, rugs, and packaging solutions to meet modern environmental compliance.',
+                'body' => '<p>With global supply chains prioritizing environmental, social, and governance (ESG) compliance, packaging materials are under intense scrutiny. Plastic wraps and synthetic containers are increasingly subject to import tariffs, plastic taxes, and consumer pushback—especially across Europe and North America.</p><h3>The Golden Fiber Advantage</h3><p>India is the world\'s largest producer of raw jute, often known as the "Golden Fiber." Jute is 100% bio-degradable, compostable, and carbon-neutral, making it the ideal eco-friendly material for commercial packaging and lifestyle products.</p><h3>Key Importer Benefits:</h3><ul><li><b>Regulatory Compliance:</b> Meets EU packaging waste directives and plastic reduction laws.</li><li><b>High Tensile Strength:</b> Jute sacks and tote bags withstand heavy export loads without tearing.</li><li><b>Custom Branding:</b> Water-based screen printing on natural jute fabric offers premium branding for wholesale retail.</li></ul><p>Explore BCE Export\'s full range of customizable jute bags, shopping totes, and industrial sacks built for international distribution.</p>',
+                'cover_image' => '/img/Handcrafted_jute.webp',
+                'author_name' => 'Sudipta Ghosh',
+                'tags' => json_encode(['jute', 'sustainability', 'packaging', 'export-trends']),
+                'featured' => 1,
+                'published_at' => '2026-09-22 14:30:00',
+            ],
+            [
+                'slug' => 'quality-checks-for-terracotta-shipments',
+                'title' => 'Essential Quality Checks for Terracotta & Clay Pottery Shipments',
+                'category_id' => 'quality-logistics',
+                'excerpt' => 'Prevent breakage during international sea freight with proper moisture testing, shock-absorbent packaging, and palletization standards.',
+                'body' => '<p>Terracotta pottery and decorative clay artifacts from West Bengal are sought after globally for home decor, garden design, and cultural exhibitions. However, clay products are inherently brittle, making packaging and moisture management vital during maritime transport.</p><h3>Pre-Shipment Inspection Protocol</h3><ol><li><b>Kiln Firing Uniformity:</b> Ensuring clay pieces undergo high-temperature firing eliminates structural micro-cracks.</li><li><b>Moisture Content Check:</b> Terracotta must be thoroughly dried to less than 2% moisture prior to packing to prevent mold during damp sea voyages.</li><li><b>Corner & Drop Tests:</b> Master boxes must pass drop tests with heavy internal foam cushioning.</li></ol><p>BCE Export implements palletized shrink wrapping and custom wood crates for all bulk terracotta shipments to ensure zero damage upon arrival at destination ports.</p>',
+                'cover_image' => '/img/Terracotta01.webp',
+                'author_name' => 'Quality Inspection Bureau',
+                'tags' => json_encode(['terracotta', 'quality-control', 'packaging', 'logistics']),
+                'featured' => 0,
+                'published_at' => '2026-09-25 11:15:00',
+            ],
+            [
+                'slug' => 'sourcing-genuine-leather-goods-from-india',
+                'title' => 'Sourcing Genuine Leather Goods from India: Quality & Craftsmanship Standards',
+                'category_id' => 'handicraft-guides',
+                'excerpt' => 'Key factors to evaluate when importing leather bags, jackets, footwear, and accessories directly from certified Indian manufacturers.',
+                'body' => '<p>India is globally recognized for high-grade leather craftsmanship, supplying luxury fashion houses and commercial buyers worldwide. From full-grain leather bags to precision-stitched jackets and formal footwear, Indian leather combines durability with refined aesthetics.</p><h3>Understanding Leather Grades for Wholesale</h3><p>When placing bulk orders, importers should specify grain type, tanning method (vegetable-tanned vs chrome-tanned), and hardware specifications (brass or stainless steel zippers).</p><p>BCE Export guarantees 100% genuine leather sourcing with REACH-compliant tanning procedures suitable for international distribution in the EU and US markets.</p>',
+                'cover_image' => '/img/Leather01.webp',
+                'author_name' => 'Export Operations',
+                'tags' => json_encode(['leather', 'sourcing', 'handicrafts', 'fashion-export']),
+                'featured' => 0,
+                'published_at' => '2026-09-26 16:45:00',
+            ]
+        ];
+
+        $postCheck = $this->pdo->prepare("SELECT id FROM blog_posts WHERE slug = ?");
+        $postInsert = $this->pdo->prepare("INSERT INTO blog_posts (slug, title, category_id, excerpt, body, cover_image, author_name, tags, featured, status, published_at, sort_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'published', ?, ?, ?, ?)");
+        
+        $postOrder = 1;
+        $insertedCount = 0;
+        foreach ($posts as $p) {
+            $postCheck->execute([$p['slug']]);
+            if (!$postCheck->fetch()) {
+                $postInsert->execute([
+                    $p['slug'],
+                    $p['title'],
+                    $p['category_id'],
+                    $p['excerpt'],
+                    $p['body'],
+                    $p['cover_image'],
+                    $p['author_name'],
+                    $p['tags'],
+                    $p['featured'],
+                    $p['published_at'],
+                    $postOrder++,
+                    $now,
+                    $now
+                ]);
+                $insertedCount++;
+            }
+        }
+
+        ($this->out)("  + Seeded Blog Categories & {$insertedCount} Blog Posts");
+        return count($posts);
     }
 }

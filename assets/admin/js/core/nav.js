@@ -22,6 +22,8 @@ window.TMH_NAV = [
         items: [
             { key: 'products', label: 'Products', icon: 'fa-boxes-stacked', href: 'products' },
             { key: 'categories', label: 'Categories', icon: 'fa-tags', href: 'categories' },
+            { key: 'blog-posts', label: 'Blog Posts', icon: 'fa-newspaper', href: 'blog-posts' },
+            { key: 'blog-categories', label: 'Blog Categories', icon: 'fa-folder-tree', href: 'blog-categories' },
             { key: 'team', label: 'Team Members', icon: 'fa-users', href: 'team' },
             { key: 'certificates', label: 'Certificates', icon: 'fa-certificate', href: 'certificates' },
             { key: 'testimonials', label: 'Testimonials', icon: 'fa-comments', href: 'testimonials' },

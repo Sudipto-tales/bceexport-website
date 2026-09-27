@@ -19,6 +19,7 @@
     <!-- Template Javascript -->
     <script src="<?= base_url('js/main.js') ?>"></script>
     <script src="<?= base_url('js/bce-dynamic.js') ?>"></script>
+    <script src="<?= base_url('js/products-grid.js') ?>"></script>
 </body>
 
 </html>

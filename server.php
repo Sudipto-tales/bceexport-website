@@ -10,6 +10,35 @@
  */
 
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/');
+file_put_contents(__DIR__ . '/server_debug.txt', date('Y-m-d H:i:s') . ' URI: ' . $uri . ' ROUTE: ' . ($_GET['route'] ?? 'none') . "\n", FILE_APPEND);
+
+/* 301 Redirect map for legacy static HTML URLs */
+$redirects = [
+    '/index.html' => '/',
+    '/about.html' => '/about',
+    '/services.html' => '/services',
+    '/service.html' => '/services',
+    '/contact.html' => '/contact',
+    '/quote.html' => '/quote',
+    '/team.html' => '/team',
+    '/testimonial.html' => '/testimonials',
+    '/testimonials.html' => '/testimonials',
+    '/leather.html' => '/products/leather',
+    '/dhokra.html' => '/products/dhokra',
+    '/furniture.html' => '/products/furniture',
+    '/terracotta.html' => '/products/terracotta',
+    '/jute.html' => '/products/jute',
+    '/wooden_handicraft.html' => '/products/wooden-handicraft',
+    '/wooden-handicraft.html' => '/products/wooden-handicraft',
+    '/fruit-vegetable.html' => '/products/fruit-vegetable',
+];
+
+$lowerUri = strtolower($uri);
+if (isset($redirects[$uri]) || isset($redirects[$lowerUri])) {
+    $target = $redirects[$uri] ?? $redirects[$lowerUri];
+    header('Location: ' . $target, true, 301);
+    exit;
+}
 
 /* ---------------------------------------------------------------
    1. Block access to sensitive files and directories

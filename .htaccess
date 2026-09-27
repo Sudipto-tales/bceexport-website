@@ -13,6 +13,27 @@ RewriteRule ^api/ - [F,L]
 
 RewriteRule ^\.git - [F,L]
 
+# 301 Redirects for Legacy Static HTML Files
+RewriteRule ^index\.html$ / [R=301,L]
+RewriteRule ^about\.html$ /about [R=301,L]
+RewriteRule ^services\.html$ /services [R=301,L]
+RewriteRule ^service\.html$ /services [R=301,L]
+RewriteRule ^contact\.html$ /contact [R=301,L]
+RewriteRule ^quote\.html$ /quote [R=301,L]
+RewriteRule ^team\.html$ /team [R=301,L]
+RewriteRule ^testimonial\.html$ /testimonials [R=301,L]
+RewriteRule ^testimonials\.html$ /testimonials [R=301,L]
+
+# Product Category Redirects
+RewriteRule ^leather\.html$ /products/leather [R=301,L]
+RewriteRule ^[D|d]hokra\.html$ /products/dhokra [R=301,L]
+RewriteRule ^[F|f]urniture\.html$ /products/furniture [R=301,L]
+RewriteRule ^[T|t]erracotta\.html$ /products/terracotta [R=301,L]
+RewriteRule ^jute\.html$ /products/jute [R=301,L]
+RewriteRule ^wooden_handicraft\.html$ /products/wooden-handicraft [R=301,L]
+RewriteRule ^wooden-handicraft\.html$ /products/wooden-handicraft [R=301,L]
+RewriteRule ^fruit-vegetable\.html$ /products/fruit-vegetable [R=301,L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?route=$1 [L,QSA]

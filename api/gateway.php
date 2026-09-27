@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../core/RouteProvider.php';
 
+if (!class_exists('ApiGatewayProvider')) {
 class ApiGatewayProvider extends RouteProvider
 {
     public static function routes(): array
@@ -13,7 +14,11 @@ class ApiGatewayProvider extends RouteProvider
             'GET:api/auth/me' => ['AuthController', 'me', 'session'],
             'POST:api/auth/verify-password' => ['AuthController', 'verifyPassword', 'session'],
 
-            /* Public intake */
+            /* Public intake & catalog */
+            'GET:api/public/products' => ['PublicApiController', 'products'],
+            'GET:api/public/categories' => ['PublicApiController', 'categories'],
+            'GET:api/public/blog-posts' => ['PublicApiController', 'blogPosts'],
+            'GET:api/public/blog-categories' => ['PublicApiController', 'blogCategories'],
             'POST:api/public/enquiry' => ['PublicIntakeController', 'enquiry'],
             'POST:api/enquiries' => ['PublicIntakeController', 'enquiry'],
 
@@ -43,6 +48,7 @@ class ApiGatewayProvider extends RouteProvider
             'DELETE:api/{resource}/{id}' => ['ResourceController', 'destroy', 'session'],
         ];
     }
+}
 }
 
 return ApiGatewayProvider::routes();

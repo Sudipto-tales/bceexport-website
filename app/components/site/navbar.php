@@ -36,6 +36,7 @@ $phone = $phone ?? '+91 8900379037';
                         <a href="<?= base_url('products/fruit-vegetable') ?>" class="dropdown-item">Fruit &amp; Vegetable Products</a>
                     </div>
                 </div>
+                <a href="<?= base_url('blog') ?>" class="nav-item nav-link<?= $active === 'blog' ? ' active' : '' ?>">Blog</a>
                 <a href="<?= base_url('contact') ?>" class="nav-item nav-link<?= $active === 'contact' ? ' active' : '' ?>">Contact</a>
             </div>
             <h4 class="m-0 pe-lg-5 d-none d-lg-block"><i class="fa fa-phone-square text-primary me-3"></i><?= e($phone) ?></h4>

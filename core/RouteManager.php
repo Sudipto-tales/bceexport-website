@@ -307,7 +307,7 @@ class RouteManager
         $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
         $basePath = str_replace('\\', '/', dirname($scriptName));
 
-        if ($basePath !== '/' && $basePath !== '.' && str_starts_with($requestUri, $basePath)) {
+        if ($basePath !== '/' && $basePath !== '.' && $basePath !== '/api' && str_starts_with($requestUri, $basePath)) {
             $requestUri = substr($requestUri, strlen($basePath));
         }
 
