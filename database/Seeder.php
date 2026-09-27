@@ -94,9 +94,6 @@ class Seeder
 
     private function seedCategories(): int
     {
-        $stmt = $this->pdo->query("SELECT COUNT(*) FROM categories");
-        if ($stmt->fetchColumn() > 0) return 0;
-
         $now = date('Y-m-d H:i:s');
         $categories = [
             ['slug' => 'leather', 'name' => 'Leather Goods', 'description' => 'Premium handcrafted genuine leather products & bags.', 'image' => '/img/Leather01.webp'],
@@ -108,12 +105,22 @@ class Seeder
             ['slug' => 'fruit-vegetable', 'name' => 'Fruit & Vegetable', 'description' => 'Fresh, organic export-grade agricultural produce from Indian farms.', 'image' => '/img/Fruit.webp'],
         ];
 
-        $stmt = $this->pdo->prepare("INSERT INTO categories (slug, name, description, image, status, sort_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $checkStmt = $this->pdo->prepare("SELECT id FROM categories WHERE slug = ?");
+        $insertStmt = $this->pdo->prepare("INSERT INTO categories (slug, name, description, image, status, sort_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $updateStmt = $this->pdo->prepare("UPDATE categories SET name = ?, description = ?, image = ?, status = ?, sort_order = ?, updated_at = ? WHERE slug = ?");
+
+        $count = 0;
         $order = 1;
         foreach ($categories as $cat) {
-            $stmt->execute([$cat['slug'], $cat['name'], $cat['description'], $cat['image'], 'published', $order++, $now, $now]);
+            $checkStmt->execute([$cat['slug']]);
+            if ($checkStmt->fetch()) {
+                $updateStmt->execute([$cat['name'], $cat['description'], $cat['image'], 'published', $order++, $now, $cat['slug']]);
+            } else {
+                $insertStmt->execute([$cat['slug'], $cat['name'], $cat['description'], $cat['image'], 'published', $order++, $now, $now]);
+                $count++;
+            }
         }
-        ($this->out)("  + Seeded 7 Product Categories");
+        ($this->out)("  + Seeded/Updated 7 Product Categories");
         return count($categories);
     }
 
@@ -186,242 +193,60 @@ class Seeder
 
     private function seedProducts(): int
     {
-        $stmt = $this->pdo->query("SELECT COUNT(*) FROM products");
-        if ($stmt->fetchColumn() > 0) return 0;
-
         $now = date('Y-m-d H:i:s');
-        $products = [
-            // Leather
-            [
-                'slug' => 'genuine-leather-jacket',
-                'name' => 'Genuine Leather Jacket',
-                'category_id' => 'leather',
-                'short_description' => 'Premium handcrafted leather jacket for international export.',
-                'description' => 'Expertly tailored from select full-grain leather, combining classic design with contemporary durability. Features brass zip hardware and silk lining.',
-                'image' => '/img/Leather 3.webp',
-                'featured' => 1
-            ],
-            [
-                'slug' => 'handcrafted-leather-shoes',
-                'name' => 'Handcrafted Leather Shoes',
-                'category_id' => 'leather',
-                'short_description' => 'Formal oxford shoes in genuine calfskin leather.',
-                'description' => 'Hand-stitched leather dress shoes offering superior comfort, durability, and a polished finish suitable for luxury retail markets worldwide.',
-                'image' => '/img/Leather 4.webp',
-                'featured' => 1
-            ],
-            [
-                'slug' => 'classic-leather-hat',
-                'name' => 'Classic Leather Hat',
-                'category_id' => 'leather',
-                'short_description' => 'Vintage finish genuine leather fedora hat.',
-                'description' => 'Durable water-resistant leather hat crafted with artisanal care, popular across international western and vintage fashion stores.',
-                'image' => '/img/Leather 5.webp',
-                'featured' => 0
-            ],
-            [
-                'slug' => 'executive-leather-briefcase',
-                'name' => 'Executive Leather Briefcase',
-                'category_id' => 'leather',
-                'short_description' => 'Professional multi-compartment leather laptop briefcase.',
-                'description' => 'Crafted from rich top-grain leather with dedicated laptop padding, document dividers, and a detachable padded shoulder strap.',
-                'image' => '/img/Leather 6.webp',
-                'featured' => 1
-            ],
-
-            // Wooden Handicraft
-            [
-                'slug' => 'hand-carved-wooden-peacock',
-                'name' => 'Hand-Carved Wooden Peacock',
-                'category_id' => 'wooden-handicraft',
-                'short_description' => 'Intricate hand-carved peacock figurine in seasoned wood.',
-                'description' => 'Showcasing intricate plumage details, hand-carved by Bengal master artisans. Polished with natural organic wax for lasting beauty.',
-                'image' => '/img/wooden Handicraft-1.webp',
-                'featured' => 1
-            ],
-            [
-                'slug' => 'royal-wooden-elephant-statue',
-                'name' => 'Royal Wooden Elephant Statue',
-                'category_id' => 'wooden-handicraft',
-                'short_description' => 'Traditional auspicious elephant with royal ambabari carving.',
-                'description' => 'Carved from single-block seasoned hardwood with delicate filigree lattice work. An iconic symbol of Indian artistic heritage.',
-                'image' => '/img/wooden Handicraft-2.webp',
-                'featured' => 1
-            ],
-            [
-                'slug' => 'carved-wooden-wall-panel',
-                'name' => 'Carved Wooden Wall Panel',
-                'category_id' => 'wooden-handicraft',
-                'short_description' => 'Decorative carved floral teak wall art plaque.',
-                'description' => 'Exquisite geometric and floral carving that adds luxury warmth to living spaces, hotel lobbies, and boutique hospitality interiors.',
-                'image' => '/img/wooden Handicraft-3.webp',
-                'featured' => 0
-            ],
-
-            // Furniture
-            [
-                'slug' => 'handcrafted-teak-dining-chair',
-                'name' => 'Handcrafted Teak Dining Chair',
-                'category_id' => 'furniture',
-                'short_description' => 'Ergonomic solid teak dining chair with cane back.',
-                'description' => 'Constructed from sustainably harvested Indian teakwood with hand-woven natural rattan backrest for timeless Scandinavian-Indian fusion.',
-                'image' => '/img/Furniture_1.webp',
-                'featured' => 1
-            ],
-            [
-                'slug' => 'traditional-royal-armchair',
-                'name' => 'Traditional Royal Armchair',
-                'category_id' => 'furniture',
-                'short_description' => 'Classic colonial style hardwood armchair with plush seating.',
-                'description' => 'Elegantly sculpted armrests and sturdy frame, upholstered in durable export-grade linen fabric for residential and lounge settings.',
-                'image' => '/img/Furniture_2.webp',
-                'featured' => 1
-            ],
-            [
-                'slug' => 'hand-carved-coffee-table',
-                'name' => 'Hand-Carved Coffee Table',
-                'category_id' => 'furniture',
-                'short_description' => 'Solid sheesham wood coffee table with brass inlays.',
-                'description' => 'Sturdy centerpiece table with hand-carved side aprons and protective polyurethane finish, flat-packed for safe international freight.',
-                'image' => '/img/Furniture_3.webp',
-                'featured' => 0
-            ],
-
-            // Jute
-            [
-                'slug' => 'eco-friendly-jute-tote-bag',
-                'name' => 'Eco-Friendly Jute Shopping Tote',
-                'category_id' => 'jute',
-                'short_description' => '100% biodegradable natural golden jute shopping bag.',
-                'description' => 'Reinforced cotton handles and laminated water-resistant interior. An eco-conscious alternative to plastic bags for global retailers.',
-                'image' => '/img/jute_1.webp',
-                'featured' => 1
-            ],
-            [
-                'slug' => 'braided-jute-storage-basket',
-                'name' => 'Braided Jute Storage Basket',
-                'category_id' => 'jute',
-                'short_description' => 'Hand-braided circular storage organizer basket.',
-                'description' => 'Artisanal storage solution woven from sun-dried natural golden jute fiber, perfect for modern bohemian home interiors.',
-                'image' => '/img/jute_2.webp',
-                'featured' => 1
-            ],
-            [
-                'slug' => 'designer-embroidered-jute-handbag',
-                'name' => 'Designer Embroidered Jute Handbag',
-                'category_id' => 'jute',
-                'short_description' => 'Fashion jute handbag with traditional thread embroidery.',
-                'description' => 'Combines ethnic Bengal threadwork with contemporary handbag styling, zippered main compartment, and comfortable shoulder straps.',
-                'image' => '/img/jute_3.webp',
-                'featured' => 0
-            ],
-
-            // Dhokra
-            [
-                'slug' => 'dhokra-tribal-musician-couple',
-                'name' => 'Dhokra Tribal Musician Couple',
-                'category_id' => 'dhokra',
-                'short_description' => 'Antique lost-wax cast brass tribal musicians.',
-                'description' => 'Cast using ancient 4,000-year-old lost-wax method. Each piece is completely one-of-a-kind, celebrating folk music traditions.',
-                'image' => '/img/Dhokra Handcrafted_1.webp',
-                'featured' => 1
-            ],
-            [
-                'slug' => 'dhokra-tribal-deer-figurine',
-                'name' => 'Dhokra Tribal Deer Figurine',
-                'category_id' => 'dhokra',
-                'short_description' => 'Handcrafted non-ferrous bell metal deer sculpture.',
-                'description' => 'Exquisitely coiled metal threads forming the body of a graceful forest deer, finished in authentic antique bronze patina.',
-                'image' => '/img/Dhokra Handcrafted_2.webp',
-                'featured' => 1
-            ],
-            [
-                'slug' => 'dhokra-war-horse-figurine',
-                'name' => 'Dhokra War Horse Figurine',
-                'category_id' => 'dhokra',
-                'short_description' => 'Traditional ceremonial horse sculpture in bell metal.',
-                'description' => 'A powerful symbol of royalty and folk mythology, decorated with traditional tribal motifs and intricate open-lattice casting.',
-                'image' => '/img/Dhokra Handcrafted_3.webp',
-                'featured' => 0
-            ],
-
-            // Terracotta
-            [
-                'slug' => 'terracotta-flower-vase',
-                'name' => 'Terracotta Flower Vase',
-                'category_id' => 'terracotta',
-                'short_description' => 'Wheel-thrown clay vase with handcrafted relief etching.',
-                'description' => 'Kiln-fired natural Bengal terracotta clay vase, showcasing artisanal hand-carved floral patterns with a natural earthy finish.',
-                'image' => '/img/Terracotta Products_1.webp',
-                'featured' => 1
-            ],
-            [
-                'slug' => 'terracotta-diya-lamp',
-                'name' => 'Terracotta Decorative Diya Lamp',
-                'category_id' => 'terracotta',
-                'short_description' => 'Ornate handcrafted multi-tier clay oil diya lamp.',
-                'description' => 'Ideal for festive decor and aromatherapy, hand-molded and sun-cured before high-temperature firing for long-lasting durability.',
-                'image' => '/img/Terracotta Products_2.webp',
-                'featured' => 1
-            ],
-            [
-                'slug' => 'terracotta-artisan-wall-plaque',
-                'name' => 'Terracotta Artisan Wall Plaque',
-                'category_id' => 'terracotta',
-                'short_description' => 'Traditional relief clay wall hanging plaque.',
-                'description' => 'Depicting rural folk village life and motifs, designed with rear hanging hook for easy interior wall installation.',
-                'image' => '/img/Terracotta Products_3.webp',
-                'featured' => 0
-            ],
-
-            // Fruit & Vegetable
-            [
-                'slug' => 'export-quality-organic-okra',
-                'name' => 'Export Quality Organic Okra',
-                'category_id' => 'fruit-vegetable',
-                'short_description' => 'Tender farm-fresh organic ladyfinger for export.',
-                'description' => 'Harvested at peak tenderness, pesticide-tested, sorted and packaged in temperature-controlled corrugated cartons for air freight.',
-                'image' => '/img/Vegetable-1.webp',
-                'featured' => 1
-            ],
-            [
-                'slug' => 'premium-indian-green-chilli',
-                'name' => 'Premium Indian Green Chilli',
-                'category_id' => 'fruit-vegetable',
-                'short_description' => 'Spicy G4 export-grade green chillies with fresh stems.',
-                'description' => 'Crisp, vibrant green chillies carefully washed, sorted, and packed in ventilated cartons meeting strict international phytosanitary rules.',
-                'image' => '/img/Vegetable-2.webp',
-                'featured' => 1
-            ],
-            [
-                'slug' => 'farm-fresh-bitter-gourd',
-                'name' => 'Farm-Fresh Bitter Gourd (Karela)',
-                'category_id' => 'fruit-vegetable',
-                'short_description' => 'Dark green organically cultivated bitter gourd.',
-                'description' => 'Rich in nutrients and freshness, sorted by size and grade, ready for direct supply to ethnic retail distributors worldwide.',
-                'image' => '/img/Vegetable-3.webp',
-                'featured' => 0
-            ]
-        ];
-
-        $stmt = $this->pdo->prepare("INSERT INTO products (slug, name, category_id, short_description, description, image, featured, status, sort_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $order = 1;
-        foreach ($products as $p) {
-            $stmt->execute([
-                $p['slug'],
-                $p['name'],
-                $p['category_id'],
-                $p['short_description'],
-                $p['description'],
-                $p['image'],
-                $p['featured'],
-                'published',
-                $order++,
-                $now,
-                $now
-            ]);
+        $jsonFile = __DIR__ . '/../tools/products-master.json';
+        $products = [];
+        if (file_exists($jsonFile)) {
+            $products = json_decode(file_get_contents($jsonFile), true) ?: [];
         }
-        ($this->out)("  + Seeded " . count($products) . " Export Products across 7 Categories");
+
+        if (empty($products)) {
+            // Fallback default products array
+            $products = [
+                ['slug' => 'jacket', 'name' => 'Jacket', 'category_id' => 'leather', 'short_description' => 'Premium handcrafted leather jacket.', 'description' => 'Tailored leather jacket for export.', 'image' => '/img/Leather 3.webp', 'featured' => 1, 'status' => 'published', 'sort_order' => 1],
+                ['slug' => 'shoes', 'name' => 'Shoes', 'category_id' => 'leather', 'short_description' => 'Handcrafted formal leather shoes.', 'description' => 'Hand-stitched oxford dress shoes.', 'image' => '/img/Leather 4.webp', 'featured' => 1, 'status' => 'published', 'sort_order' => 2],
+            ];
+        }
+
+        $checkStmt = $this->pdo->prepare("SELECT id FROM products WHERE slug = ?");
+        $insertStmt = $this->pdo->prepare("INSERT INTO products (slug, name, category_id, short_description, description, image, featured, status, sort_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $updateStmt = $this->pdo->prepare("UPDATE products SET name = ?, category_id = ?, short_description = ?, description = ?, image = ?, featured = ?, status = ?, sort_order = ?, updated_at = ? WHERE slug = ?");
+
+        $inserted = 0;
+        foreach ($products as $p) {
+            $slug = $p['slug'];
+            $checkStmt->execute([$slug]);
+            if ($checkStmt->fetch()) {
+                $updateStmt->execute([
+                    $p['name'],
+                    $p['category_id'],
+                    $p['short_description'] ?? '',
+                    $p['description'] ?? '',
+                    $p['image'] ?? '',
+                    !empty($p['featured']) ? 1 : 0,
+                    $p['status'] ?? 'published',
+                    $p['sort_order'] ?? 1,
+                    $now,
+                    $slug
+                ]);
+            } else {
+                $insertStmt->execute([
+                    $slug,
+                    $p['name'],
+                    $p['category_id'],
+                    $p['short_description'] ?? '',
+                    $p['description'] ?? '',
+                    $p['image'] ?? '',
+                    !empty($p['featured']) ? 1 : 0,
+                    $p['status'] ?? 'published',
+                    $p['sort_order'] ?? 1,
+                    $now,
+                    $now
+                ]);
+                $inserted++;
+            }
+        }
+        ($this->out)("  + Seeded/Upserted " . count($products) . " Export Products across 7 Categories ({$inserted} new)");
         return count($products);
     }
 }

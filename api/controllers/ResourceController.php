@@ -523,8 +523,11 @@ class ResourceController extends ApiController
 
                 case 'ref':
                     $target = ResourceRegistry::get($filter['target']);
-                    $where[] = 't.' . $filter['column'] . ' = (SELECT id FROM ' . $target['table']
-                        . ' WHERE ' . $target['key'] . ' = ?)';
+                    $where[] = '(t.' . $filter['column'] . ' = (SELECT CAST(id AS TEXT) FROM ' . $target['table']
+                        . ' WHERE ' . $target['key'] . ' = ?) OR t.' . $filter['column'] . ' = (SELECT id FROM ' . $target['table']
+                        . ' WHERE ' . $target['key'] . ' = ?) OR t.' . $filter['column'] . ' = ?)';
+                    $params[] = $value;
+                    $params[] = $value;
                     $params[] = $value;
                     break;
 
@@ -752,16 +755,18 @@ class ResourceController extends ApiController
      * Cached per request: a listing of twenty posts asks for the same handful
      * of authors over and over.
      */
-    private function refKey(string $resourceName, ?int $id): ?string
+    private function refKey(string $resourceName, mixed $id): ?string
     {
         static $cache = [];
 
-        if (!$id) {
+        if ($id === null || $id === '') {
             return null;
         }
 
-        if (isset($cache[$resourceName][$id])) {
-            return $cache[$resourceName][$id];
+        $cacheKey = (string) $id;
+
+        if (isset($cache[$resourceName][$cacheKey])) {
+            return $cache[$resourceName][$cacheKey];
         }
 
         $target = ResourceRegistry::get($resourceName);
@@ -770,9 +775,12 @@ class ResourceController extends ApiController
             return null;
         }
 
-        $key = db_scalar('SELECT ' . $target['key'] . ' FROM ' . $target['table'] . ' WHERE id = ?', [$id]);
+        $key = db_scalar(
+            'SELECT ' . $target['key'] . ' FROM ' . $target['table'] . ' WHERE id = ? OR ' . $target['key'] . ' = ?',
+            [$id, (string)$id]
+        );
 
-        return $cache[$resourceName][$id] = ($key === false ? null : $key);
+        return $cache[$resourceName][$cacheKey] = ($key === false ? (string)$id : $key);
     }
 
     private function userName(mixed $id): ?string
