@@ -105,7 +105,7 @@
         });
 
         if (!data) return;
-        if (!data.slug) data.slug = U.slugify(data.name);
+        if (!data.slug) data.slug = (U.slugify || U.slug)(data.name || '');
 
         if (record) {
             await store.update('blog-categories', record.id || record.slug, data);

@@ -188,11 +188,12 @@
                     });
 
                     grid.innerHTML = list.length ? list.map((m) => `
-                        <div class="media-tile" data-url="${esc(m.url)}"
+                        <div class="media-tile" data-url="${esc(m.url)}" data-id="${esc(m.id)}"
                              aria-selected="${selected === m.url}" role="button" tabindex="0">
                             <img src="${esc(U.mediaUrl(m.url))}" alt="${esc(m.alt || m.filename)}" loading="lazy">
                             ${!m.alt ? '<span class="media-tile__flag">No alt</span>' : ''}
                             <span class="media-tile__bar">${esc(m.filename)}</span>
+                            <button type="button" class="media-tile__del" data-act="delete-media" data-id="${esc(m.id)}" title="Delete file permanently"><i class="fa-solid fa-trash-can"></i></button>
                         </div>`).join('')
                         : '<p class="muted text-sm">Nothing in this folder yet.</p>';
 
@@ -210,6 +211,37 @@
                             }
                         });
                         tile.addEventListener('dblclick', () => close(tile.dataset.url));
+                    });
+
+                    [...grid.querySelectorAll('[data-act="delete-media"]')].forEach((delBtn) => {
+                        delBtn.addEventListener('click', async (e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            const mId = delBtn.dataset.id;
+                            if (!mId) return;
+
+                            const ok = await root.TMH.confirm({
+                                title: 'Delete media file?',
+                                body: 'This will permanently remove the file from server storage and the media library.',
+                                danger: true,
+                                icon: 'fa-trash-can',
+                            });
+
+                            if (!ok) return;
+
+                            try {
+                                await root.TMH.api.del(`api/media/${encodeURIComponent(mId)}`, { force: 'true', permanent: 'true' });
+                                root.TMH.toast.success('Media file deleted');
+                                rows = rows.filter((r) => String(r.id) !== String(mId));
+                                if (selected && rows.every((r) => r.url !== selected)) {
+                                    selected = '';
+                                    useBtn.disabled = true;
+                                }
+                                render();
+                            } catch (err) {
+                                root.TMH.toast.error(err.message || 'Failed to delete media file');
+                            }
+                        });
                     });
                 }
 

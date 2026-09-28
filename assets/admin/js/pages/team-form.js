@@ -44,13 +44,15 @@
                 </div>
             </form>`;
 
-        window.TMH.media.paintAll(document.getElementById('teamForm'), record || {});
+        const formEl = document.getElementById('teamForm');
+        if (window.TMH.form) window.TMH.form.bind(formEl, record || {});
+        if (window.TMH.media) window.TMH.media.paintAll(formEl, record || {});
 
         document.getElementById('teamForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = formLib.collect(e.target);
 
-            if (!data.slug) data.slug = U.slugify(data.name);
+            if (!data.slug) data.slug = (U.slugify || U.slug)(data.name || '');
 
             try {
                 if (memberId) {

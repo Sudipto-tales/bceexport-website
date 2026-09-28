@@ -486,7 +486,10 @@ class ResourceController extends ApiController
      */
     private function conditions(array $r): array
     {
-        $where = ['t.deleted_at IS NULL'];
+        $where = [];
+        if ($this->tableHasDeletedAt($r['table'])) {
+            $where[] = 't.deleted_at IS NULL';
+        }
         $params = [];
 
         $q = trim((string) ($this->query('q') ?? ''));
@@ -1143,7 +1146,7 @@ class ResourceController extends ApiController
         return $target['fields'][$target['label']]['column'] ?? ResourceRegistry::snake($target['label']);
     }
 
-    private function tableHasDeletedAt(string $table): bool
+    protected function tableHasDeletedAt(string $table): bool
     {
         static $cache = [];
 

@@ -52,14 +52,16 @@
                 </div>
             </form>`;
 
-        window.TMH.media.paintAll(document.getElementById('productForm'), record || {});
+        const formEl = document.getElementById('productForm');
+        if (window.TMH.form) window.TMH.form.bind(formEl, record || {});
+        if (window.TMH.media) window.TMH.media.paintAll(formEl, record || {});
 
         document.getElementById('productForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = formLib.collect(e.target);
 
             if (!data.slug) {
-                data.slug = U.slugify(data.name);
+                data.slug = (U.slugify || U.slug)(data.name || '');
             }
 
             try {

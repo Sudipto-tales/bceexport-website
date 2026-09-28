@@ -44,6 +44,10 @@
                 .slice(0, 70);
         },
 
+        slugify(s) {
+            return util.slug(s);
+        },
+
         /* ---- query string ---- */
 
         params() {

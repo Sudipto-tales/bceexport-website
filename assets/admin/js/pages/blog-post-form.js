@@ -59,9 +59,13 @@
 
         const formEl = document.getElementById('blogForm');
 
-        if (window.TMH.editor) {
+        if (!window.TMH.editor) {
+            console.error('TMH.editor missing — check type=editor in PHP shell');
+            if (toast) toast.error('Rich text editor failed to load. Reload the page.');
+        } else {
             window.TMH.editor.upgradeAll(formEl);
         }
+
         if (window.TMH.form) {
             window.TMH.form.bind(formEl, record || {});
         }
@@ -69,9 +73,22 @@
             window.TMH.media.paintAll(formEl, record || {});
         }
 
+        /* Ensure editor body content is populated even if bind ran before upgrade */
+        if (record && record.body) {
+            const bodyEl = formEl.querySelector('[data-editor="body"] .editor__body');
+            if (bodyEl && !bodyEl.innerHTML.trim()) {
+                bodyEl.innerHTML = record.body;
+            }
+        }
+
         formEl.addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = formLib.collect(e.target);
+
+            const bodyEl = e.target.querySelector('[data-editor="body"] .editor__body');
+            if (bodyEl) {
+                data.body = bodyEl.innerHTML.trim();
+            }
 
             if (!data.title) {
                 toast.error('Article Title is required');
@@ -79,7 +96,7 @@
             }
 
             if (!data.slug) {
-                data.slug = U.slugify(data.title);
+                data.slug = (U.slugify || U.slug)(data.title || '');
             }
 
             try {

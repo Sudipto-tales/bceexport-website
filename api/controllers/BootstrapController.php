@@ -35,9 +35,13 @@ class BootstrapController extends ResourceController
                not dragged into place, it has a date — so the order is the
                resource's own default, the same one its list endpoint falls back
                to when the caller names no sort. */
-            $rows = db_fetch_all(
-                'SELECT t.* FROM ' . $r['table'] . ' t WHERE t.deleted_at IS NULL' . $this->defaultOrder($r)
-            );
+            $sql = 'SELECT t.* FROM ' . $r['table'] . ' t';
+            if ($this->tableHasDeletedAt($r['table'])) {
+                $sql .= ' WHERE t.deleted_at IS NULL';
+            }
+            $sql .= $this->defaultOrder($r);
+
+            $rows = db_fetch_all($sql);
 
             $out[$name] = $this->rows($r, $rows);
         }

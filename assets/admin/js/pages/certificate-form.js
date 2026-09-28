@@ -41,13 +41,15 @@
                 </div>
             </form>`;
 
-        window.TMH.media.paintAll(document.getElementById('certForm'), record || {});
+        const formEl = document.getElementById('certForm');
+        if (window.TMH.form) window.TMH.form.bind(formEl, record || {});
+        if (window.TMH.media) window.TMH.media.paintAll(formEl, record || {});
 
         document.getElementById('certForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = formLib.collect(e.target);
 
-            if (!data.slug) data.slug = U.slugify(data.title);
+            if (!data.slug) data.slug = (U.slugify || U.slug)(data.title || '');
 
             try {
                 if (certId) {

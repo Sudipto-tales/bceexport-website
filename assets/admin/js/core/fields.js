@@ -166,7 +166,7 @@
             return `
             <div class="field${o.wide === false ? '' : ' field--wide'}">
                 <label class="toggle">
-                    <input type="checkbox" name="${esc(o.name)}">
+                    <input type="checkbox" name="${esc(o.name)}"${o.value ? ' checked' : ''}>
                     <span class="toggle__track"></span>
                     <span class="toggle__text">${esc(o.label)}</span>
                 </label>

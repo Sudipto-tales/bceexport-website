@@ -1726,6 +1726,35 @@ tr.drop-target td {
     border-radius: var(--radius-xs);
 }
 
+.media-tile__del {
+    position: absolute;
+    top: var(--s2);
+    right: var(--s2);
+    width: 26px;
+    height: 26px;
+    border-radius: var(--radius-xs);
+    background: rgba(220, 38, 38, 0.88);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    border: none;
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+    z-index: 5;
+    cursor: pointer;
+}
+
+.media-tile:hover .media-tile__del,
+.media-tile:focus-within .media-tile__del {
+    opacity: 1;
+}
+
+.media-tile__del:hover {
+    background: rgb(220, 38, 38);
+    transform: scale(1.1);
+}
+
 /* =========================================================
    RICH TEXT EDITOR
    ========================================================= */

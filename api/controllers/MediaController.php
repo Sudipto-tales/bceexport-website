@@ -235,7 +235,7 @@ class MediaController extends ApiController
     public function destroy(): never
     {
         $id = (string) $this->param('id');
-        $row = $this->find($id, true);
+        $row = $this->find($id, true) ?? $this->find($id, false);
 
         if (!$row) {
             Api::notFound();
@@ -248,9 +248,23 @@ class MediaController extends ApiController
             Api::hasDependents($usedBy);
         }
 
+        if (!empty($row['path'])) {
+            $baseDir = defined('__BASEDIR__') ? __BASEDIR__ : dirname(__DIR__, 2);
+            $relPath = ltrim((string) $row['path'], '/');
+            $candidates = [
+                $baseDir . '/public/' . $relPath,
+                $baseDir . '/' . $relPath,
+            ];
+            foreach ($candidates as $filePath) {
+                if (file_exists($filePath)) {
+                    @unlink($filePath);
+                }
+            }
+        }
+
         db_execute(
-            'UPDATE media SET deleted_at = ?, updated_at = ? WHERE id = ?',
-            [now_iso(), now_iso(), (int) $row['id']]
+            'DELETE FROM media WHERE id = ? OR public_id = ?',
+            [(int) $row['id'], $id]
         );
 
         ActivityLog::record(
