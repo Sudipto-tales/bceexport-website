@@ -89,9 +89,9 @@ foreach ($products as $p) {
                             <i class="fa fa-share"></i>
                             <span>
                                 <?php $wa_text = urlencode('Hi, I am interested in ' . $product['name'] . ' (' . $category['name'] . ')'); ?>
-                                <a href="https://wa.me/<?= $whatsappNumber ?>?text=<?= $wa_text ?>" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
-                                <a href="https://www.facebook.com/Bceexport" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
-                                <a href="https://www.instagram.com/bceexport/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                                <a href="https://wa.me/<?= $whatsappNumber ?>?text=<?= $wa_text ?>" target="_blank" rel="noopener" aria-label="Inquire on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                                <a href="https://www.facebook.com/Bceexport" target="_blank" rel="noopener" aria-label="Share on Facebook"><i class="fab fa-facebook-f"></i></a>
+                                <a href="https://www.instagram.com/bceexport/" target="_blank" rel="noopener" aria-label="Follow on Instagram"><i class="fab fa-instagram"></i></a>
                             </span>
                         </div>
                     </div>

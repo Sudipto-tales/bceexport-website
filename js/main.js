@@ -85,8 +85,8 @@
         loop: true,
         nav : true,
         navText : [
-            '<i class="bi bi-chevron-left"></i>',
-            '<i class="bi bi-chevron-right"></i>'
+            '<i class="bi bi-chevron-left" aria-label="Previous Slide"></i>',
+            '<i class="bi bi-chevron-right" aria-label="Next Slide"></i>'
         ],
         animateOut: 'slideOutLeft',
         animateIn: 'slideInRight'
@@ -103,8 +103,8 @@
         loop: true,
         nav: true,
         navText : [
-            '<i class="bi bi-chevron-left"></i>',
-            '<i class="bi bi-chevron-right"></i>'
+            '<i class="bi bi-chevron-left" aria-label="Previous Testimonial"></i>',
+            '<i class="bi bi-chevron-right" aria-label="Next Testimonial"></i>'
         ],
         animateOut: 'slideUp',
         animateIn: 'slideInDown',
@@ -132,8 +132,8 @@
         loop: true,
         nav: true,
         navText : [
-            '<i class="bi bi-chevron-left"></i>',
-            '<i class="bi bi-chevron-right"></i>'
+            '<i class="bi bi-chevron-left" aria-label="Previous Certification"></i>',
+            '<i class="bi bi-chevron-right" aria-label="Next Certification"></i>'
         ],
         animateOut: 'fadeOut',
         animateIn: 'fadeIn',
@@ -157,21 +157,22 @@
 
 /* WhatsApp Form Senders */
 function sendToWhatsAppQuote() {
-    var name = document.getElementById('quoteName').value.trim();
-    var email = document.getElementById('quoteEmail').value.trim();
-    var mobile = document.getElementById('quoteMobile').value.trim();
-    var subject = document.getElementById('quoteSubject').value.trim();
-    var message = document.getElementById('quoteMessage').value.trim();
+    var getVal = function(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; };
+    var name = getVal('quoteName') || getVal('name');
+    var email = getVal('quoteEmail') || getVal('email');
+    var mobile = getVal('quoteMobile') || getVal('mobile');
+    var subject = getVal('quoteSubject') || getVal('subject') || 'Quote Request';
+    var message = getVal('quoteMessage') || getVal('message');
 
-    if (!name || !email || !mobile || !subject || !message) {
-        alert('Please fill all fields before sending.');
+    if (!name || !email || !message) {
+        alert('Please fill all required fields before sending.');
         return;
     }
 
     var text = "Hello BCE Export,\n\n" +
                "*Name:* " + name + "\n" +
                "*Email:* " + email + "\n" +
-               "*Mobile:* " + mobile + "\n" +
+               (mobile ? "*Mobile:* " + mobile + "\n" : "") +
                "*Subject:* " + subject + "\n" +
                "*Message:* " + message;
 
@@ -179,22 +180,6 @@ function sendToWhatsAppQuote() {
 }
 
 function sendToWhatsAppContact() {
-    var name = document.getElementById('name').value.trim();
-    var email = document.getElementById('email').value.trim();
-    var subject = document.getElementById('subject').value.trim();
-    var message = document.getElementById('message').value.trim();
-
-    if (!name || !email || !subject || !message) {
-        alert('Please fill all fields before sending.');
-        return;
-    }
-
-    var text = "Hello BCE Export,\n\n" +
-               "*Name:* " + name + "\n" +
-               "*Email:* " + email + "\n" +
-               "*Subject:* " + subject + "\n" +
-               "*Message:* " + message;
-
-    window.open('https://wa.me/+918900379037?text=' + encodeURIComponent(text), '_blank');
+    sendToWhatsAppQuote();
 }
 

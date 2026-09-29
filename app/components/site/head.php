@@ -86,24 +86,34 @@ $ogImg = $ogImage ?? base_url('img/about.webp');
     </script>
 
 
-    <!-- Google Web Fonts -->
+    <?php if (($active ?? '') === 'home'): ?>
+    <link rel="preload" as="image" href="<?= base_url('img/carousel-1.webp') ?>" fetchpriority="high">
+    <?php endif; ?>
+
+    <!-- Google Web Fonts & CDNs -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" crossorigin="anonymous">
 
-    <!-- Libraries Stylesheet -->
-    <link href="<?= base_url('lib/animate/animate.min.css') ?>" rel="stylesheet">
-    <link href="<?= base_url('lib/owlcarousel/assets/owl.carousel.min.css') ?>" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
+    <!-- Customized Bootstrap Stylesheet (Critical) -->
     <link href="<?= base_url('css/bootstrap.min.css') ?>" rel="stylesheet">
 
-    <!-- Template Stylesheet -->
+    <!-- Template Stylesheet (Critical) -->
     <link href="<?= base_url('css/style.css') ?>" rel="stylesheet">
+
+    <!-- Non-critical Libraries Stylesheet (Deferred) -->
+    <link href="<?= base_url('lib/animate/animate.min.css') ?>" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="<?= base_url('lib/owlcarousel/assets/owl.carousel.min.css') ?>" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="<?= base_url('lib/animate/animate.min.css') ?>" rel="stylesheet">
+        <link href="<?= base_url('lib/owlcarousel/assets/owl.carousel.min.css') ?>" rel="stylesheet">
+    </noscript>
 </head>
 
 <body>

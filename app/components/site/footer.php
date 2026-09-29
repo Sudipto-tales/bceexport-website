@@ -18,12 +18,12 @@ $address = $address ?? 'Arabindanagar (N) Bankura 722101 West Bengal, INDIA';
                     <p class="mb-2"><i class="fa fa-phone-alt me-3"></i><span data-bce-phone><?= e($phone) ?></span></p>
                     <p class="mb-2"><i class="fa fa-envelope me-3"></i><span data-bce-email><?= e($email) ?></span></p>
                     <div class="d-flex pt-2">
-                        <a class="btn btn-outline-light btn-social" href="<?= e(setting('social', 'facebook', 'https://www.facebook.com/share/19tPMJFtDS/')) ?>"><i class="fab fa-facebook-f"></i></a>
-                        <a class="btn btn-outline-light btn-social" href="<?= e(setting('social', 'instagram', 'https://www.instagram.com/bce_export/')) ?>"><i class="fab fa-instagram"></i></a>
-                        <a class="btn btn-outline-light btn-social" href="https://t.me/Bce_Export"><i class="fab fa-telegram"></i></a>
-                        <a class="btn btn-outline-light btn-social" href="<?= e(setting('social', 'whatsapp', 'https://wa.me/+918900379037')) ?>"><i class="fab fa-whatsapp"></i></a>
-                        <a class="btn btn-outline-light btn-social" href="https://youtube.com/@bcasudipta"><i class="fab fa-youtube"></i></a>
-                        <a class="btn btn-outline-light btn-social" href="<?= e(setting('social', 'linkedin', 'https://www.linkedin.com/in/sudipta-ghosh-9a3a502b5')) ?>"><i class="fab fa-linkedin-in"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="<?= e(setting('social', 'facebook', 'https://www.facebook.com/share/19tPMJFtDS/')) ?>" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="<?= e(setting('social', 'instagram', 'https://www.instagram.com/bce_export/')) ?>" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="https://t.me/Bce_Export" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="<?= e(setting('social', 'whatsapp', 'https://wa.me/+918900379037')) ?>" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="https://youtube.com/@bcasudipta" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="<?= e(setting('social', 'linkedin', 'https://www.linkedin.com/in/sudipta-ghosh-9a3a502b5')) ?>" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">

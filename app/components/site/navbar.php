@@ -11,12 +11,9 @@ $phone = $phone ?? '+91 8900379037';
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow border-top border-5 border-primary sticky-top p-0">
         <a href="<?= base_url('/') ?>" class="navbar-brand bg-primary d-flex align-items-center px-4 px-lg-5">
-            <h2 class="mb-2 text-white">BCE <B>Export</B></h2>
+            <h2 class="m-0 text-white">BCE <b>Export</b></h2>
         </a>
-        <br>
-            <h5>Group of cab express</h5>
-        </br>
-        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">

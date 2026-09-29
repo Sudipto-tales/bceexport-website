@@ -3,7 +3,7 @@
     <div class="container-fluid p-0 pb-5">
         <div class="owl-carousel header-carousel position-relative mb-5">
             <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="img/carousel-1.webP" alt="">
+                <img class="img-fluid" src="img/carousel-1.webp" alt="Exporting Authentic Indian Handicrafts Worldwide" width="1200" height="675" fetchpriority="high">
                 <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(6, 3, 21, .5);">
                     <div class="container">
                         <div class="row justify-content-start">
@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="img/carousel-2.webp" alt="">
+                <img class="img-fluid" src="img/carousel-2.webp" alt="Supplying Quality Indian Handicrafts to Global Markets" width="1200" height="675" loading="lazy">
                 <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(6, 3, 21, .5);">
                     <div class="container">
                         <div class="row justify-content-start">
@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="img/carousel-3.webp" alt="">
+                <img class="img-fluid" src="img/carousel-3.webp" alt="Tradition Meets Sustainability in Bamboo Handicrafts" width="1200" height="675" loading="lazy">
                 <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(6, 3, 21, .5);">
                     <div class="container">
                         <div class="row justify-content-start">
@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="img/carousel-4.webp" alt="">
+                <img class="img-fluid" src="img/carousel-4.webp" alt="Authentic Indian Craftsmanship Delivered Worldwide" width="1200" height="675" loading="lazy">
                 <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(6, 3, 21, .5);">
                     <div class="container">
                         <div class="row justify-content-start">
@@ -77,7 +77,7 @@
             <div class="row g-5 mx-lg-0">
                 <div class="col-lg-6 ps-lg-0 wow fadeInLeft" data-wow-delay="0.1s" style="min-height: 400px;">
                     <div class="position-relative h-100">
-                        <img class="position-absolute img-fluid w-100 h-100" src="img/about.webp" style="object-fit: cover;" alt="">
+                        <img class="position-absolute img-fluid w-100 h-100" src="img/about.webp" style="object-fit: cover;" alt="BCE Export Authentic Indian Handicrafts" width="600" height="600" loading="lazy">
                     </div>
                 </div>
                 <div class="col-lg-6 about-text wow fadeInUp" data-wow-delay="0.3s">
@@ -166,7 +166,7 @@
                         <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="<?= $delay ?>s">
                             <div class="service-item p-4">
                                 <div class="overflow-hidden mb-4" style="height:220px">
-                                    <img class="img-fluid w-100 h-100" style="object-fit:cover" src="<?= base_url(ltrim($cat['image'] ?? 'img/service-1.webp', '/')) ?>" alt="<?= e($cat['name']) ?>">
+                                    <img class="img-fluid w-100 h-100" style="object-fit:cover" src="<?= base_url(ltrim($cat['image'] ?? 'img/service-1.webp', '/')) ?>" alt="<?= e($cat['name']) ?>" width="400" height="220" loading="lazy">
                                 </div>
                                 <h4 class="mb-3"><?= e($cat['name']) ?></h4>
                                 <p><?= e($cat['description'] ?? '') ?></p>
@@ -194,7 +194,7 @@
                 <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="service-item p-4">
                         <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/Air.webp" alt="">
+                            <img class="img-fluid" src="img/Air.webp" alt="Air Freight Shipping" width="400" height="240" loading="lazy">
                         </div>
                         <h4 class="mb-3">Air Freight</h4>
                         <p>Fast and reliable air freight solutions ensuring secure, efficient, and timely global export deliveries.</p>
@@ -204,7 +204,7 @@
                 <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="service-item p-4">
                         <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/ship.webp" alt="">
+                            <img class="img-fluid" src="img/ship.webp" alt="Ocean Freight Shipping" width="400" height="240" loading="lazy">
                         </div>
                         <h4 class="mb-3">Ocean Freight</h4>
                         <p>Reliable ocean freight solutions ensuring safe, cost-effective, and efficient shipping for global export and import cargo.</p>
@@ -214,7 +214,7 @@
                 <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item p-4">
                         <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/Bus.webp" alt="">
+                            <img class="img-fluid" src="img/Bus.webp" alt="Road Freight Logistics" width="400" height="240" loading="lazy">
                         </div>
                         <h4 class="mb-3">Road Freight</h4>
                         <p>Efficient road freight services ensuring safe, timely transportation and seamless delivery for domestic and international cargo.</p>
@@ -224,7 +224,7 @@
                 <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="service-item p-4">
                         <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/Train.webp" alt="">
+                            <img class="img-fluid" src="img/Train.webp" alt="Train Freight Logistics" width="400" height="240" loading="lazy">
                         </div>
                         <h4 class="mb-3">Train Freight</h4>
                         <p>Reliable train freight solutions ensuring efficient, cost effective transportation for bulk cargo across long distances.</p>
@@ -234,7 +234,7 @@
                 <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="service-item p-4">
                         <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/Customs.webp" alt="">
+                            <img class="img-fluid" src="img/Customs.webp" alt="Customs Clearance Export" width="400" height="240" loading="lazy">
                         </div>
                         <h4 class="mb-3">Customs Clearance</h4>
                         <p>Efficient customs clearance ensuring smooth documentation, compliance, and timely processing for global shipments.</p>
@@ -244,7 +244,7 @@
                 <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item p-4">
                         <div class="overflow-hidden mb-4">
-                            <img class="img-fluid" src="img/Warehouse.webp" alt="">
+                            <img class="img-fluid" src="img/Warehouse.webp" alt="Warehouse Storage Solutions" width="400" height="240" loading="lazy">
                         </div>
                         <h4 class="mb-3">Warehouse Solutions</h4>
                         <p>Efficient warehouse solutions ensuring optimal storage, handling, and distribution of goods for seamless supply chain management.</p>
@@ -294,7 +294,7 @@
                 </div>
                 <div class="col-lg-6 pe-lg-0 wow fadeInRight" data-wow-delay="0.1s" style="min-height: 400px;">
                     <div class="position-relative h-100">
-                        <img class="position-absolute img-fluid w-100 h-100" src="img/feature.webp" style="object-fit: cover;" alt="">
+                        <img class="position-absolute img-fluid w-100 h-100" src="img/feature.webp" style="object-fit: cover;" alt="Worldwide Export Quality Assurance" width="600" height="600" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -631,7 +631,7 @@
                         <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="<?= $delay ?>s">
                             <div class="team-item p-4">
                                 <div class="overflow-hidden mb-4" style="height:260px">
-                                    <img class="img-fluid w-100 h-100" style="object-fit:cover" src="<?= base_url(ltrim($m['photo'] ?? 'img/team-1.webp', '/')) ?>" alt="<?= e($m['name']) ?>">
+                                    <img class="img-fluid w-100 h-100" style="object-fit:cover" src="<?= base_url(ltrim($m['photo'] ?? 'img/team-1.webp', '/')) ?>" alt="<?= e($m['name']) ?>" width="300" height="260" loading="lazy">
                                 </div>
                                 <h5 class="mb-0"><?= e($m['name']) ?></h5>
                                 <p><?= e($m['role']) ?></p>
@@ -658,7 +658,7 @@
                         <div class="certification-item p-4">
                             <div class="certification-card">
                                 <div class="certification-image mb-4" style="height:120px;display:grid;place-items:center">
-                                    <img class="img-fluid" style="max-height:100%;width:auto;object-fit:contain" src="<?= base_url(ltrim($cert['image'] ?? 'img/certification-1.png', '/')) ?>" alt="<?= e($cert['title']) ?>">
+                                    <img class="img-fluid" style="max-height:100%;width:auto;object-fit:contain" src="<?= base_url(ltrim(str_replace('.png', '.webp', $cert['image'] ?? 'img/certification-1.webp'), '/')) ?>" alt="<?= e($cert['title']) ?>" width="200" height="120" loading="lazy">
                                 </div>
                                 <h5 class="text-center"><?= e($cert['title']) ?></h5>
                                 <p class="text-center text-muted"><?= e($cert['issuer'] ?? '') ?></p>
@@ -684,7 +684,7 @@
                         <div class="testimonial-item p-4 my-5">
                             <i class="fa fa-quote-right fa-3x text-light position-absolute top-0 end-0 mt-n3 me-4"></i>
                             <div class="d-flex align-items-end mb-4">
-                                <img class="img-fluid flex-shrink-0" src="<?= base_url(ltrim($tst['photo'] ?? 'img/testimonial-1.webp', '/')) ?>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;">
+                                <img class="img-fluid flex-shrink-0" src="<?= base_url(ltrim($tst['photo'] ?? 'img/testimonial-1.webp', '/')) ?>" alt="<?= e($tst['name']) ?>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;" width="80" height="80" loading="lazy">
                                 <div class="ms-4">
                                     <h5 class="mb-1"><?= e($tst['name']) ?></h5>
                                     <p class="m-0"><?= e($tst['company'] ?? $tst['role'] ?? '') ?></p>

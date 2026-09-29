@@ -29,6 +29,8 @@ class PublicController extends BaseController
         App::render('site/head', array_merge($layoutData, $data));
         App::render('site/navbar', $layoutData);
 
+        echo '<main id="main-content">';
+
         /* Subpages get a page-header banner with breadcrumbs.
            The homepage has no pageTitle and goes straight to the carousel. */
         if (($data['showPageHeader'] ?? true) !== false && !empty($data['pageTitle'])) {
@@ -40,6 +42,8 @@ class PublicController extends BaseController
         }
 
         render_view('/app/page/site/' . $body . '.php', array_merge($layoutData, $data));
+
+        echo '</main>';
 
         App::render('site/footer', $layoutData);
         App::render('site/scripts', $layoutData);
